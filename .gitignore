@@ -60,3 +60,9 @@ output/run_final_preflight/
 
 # Notebook checkpoints
 .ipynb_checkpoints/
+
+# Retired material kept locally for reference, not part of the release
+archive/
+
+# Figure PNGs are previews of the committed PDFs
+paper/artifacts/*.png

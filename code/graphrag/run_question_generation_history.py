@@ -1,0 +1,210 @@
+#!/usr/bin/env python3
+"""
+History question generation — full 102 (35 single_specific / 33
+aggregate_cross_paper / 34 edge_multihop).
+
+single-hop gate: PASS (mean faithfulness 0.989), generic SYSTEM_PROMPT
+  (text-passage wording works fine for books, no history-specific prompt
+  needed).
+aggregate: history's aggregate_id (subject category) is NOT broken like
+  amazon's categorical_label -- sample_cross_category_groups works directly.
+  Uses a dedicated HISTORY_AGGREGATE_SYSTEM_PROMPT (book-specific wording).
+edge_multihop: secondary_id is fully absent for history (no author/reviewer
+  hop possible). Category-bridge fallback (random cross-category pairs,
+  LLM asked to invent the connection) was tried first and rejected --
+  produced chronologically-impossible fabricated "influence" claims (e.g.
+  WWI "influencing" 1st-century texts). Replaced with structural_edges
+  (E10d, pre-curated documented related-book links) -- real relationships
+  instead of invented ones. Gate on 5 structural_edges pairs mechanically
+  scored 2/5 due to a validator bug (required literal substring "both
+  books"; natural LLM phrasing was "both 'Title A' and 'Title B'").
+  Direct inspection confirmed content was clean on all 5 (two Holocaust
+  survivor memoirs, two Civil War histories, two witch-hunt histories --
+  real curated relationships, no fabricated causal claims). Validator
+  fixed (validate_edge_multihop_titles: bare "both" + >=1 book title) per
+  explicit instruction; full 34 generated directly using that batch as
+  confirmation, no re-gate.
+"""
+import sys
+from collections import Counter
+from pathlib import Path
+
+import pandas as pd
+from dotenv import load_dotenv
+
+load_dotenv()
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from format_rows import format_arxiv_row
+from generate_qa import (
+    generate_qa, generate_aggregate_qa, generate_edge_multihop_qa,
+    validate_qa, validate_edge_multihop_titles, classify_question_type,
+    sample_cross_category_groups, sample_structural_edge_pairs, _client,
+    HISTORY_AGGREGATE_SYSTEM_PROMPT, HISTORY_STRUCTURAL_EDGE_SYSTEM_PROMPT,
+)
+from evaluate_rag import load_pooled_samples
+
+REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+OUT_DIR = REPO_ROOT / 'data/history'
+OUT_DIR.mkdir(parents=True, exist_ok=True)
+
+N_SINGLE_TARGET, N_SINGLE_BUDGET = 35, 100
+N_AGG_TARGET, N_AGG_BUDGET = 33, 60
+N_EDGE_TARGET, N_EDGE_BUDGET = 34, 110
+
+
+def run_singlehop(df, client, seed=42):
+    shuffled = df.sample(frac=1, random_state=seed).reset_index(drop=True)
+    results, rejections, attempts = [], Counter(), 0
+    for _, row in shuffled.iterrows():
+        if len(results) >= N_SINGLE_TARGET or attempts >= N_SINGLE_BUDGET:
+            break
+        attempts += 1
+        text = format_arxiv_row(row.to_dict())
+        if text is None:
+            rejections['formatter: null/short text'] += 1
+            continue
+        try:
+            qa = generate_qa(text, client=client)
+        except ValueError as e:
+            rejections[f'API/parse: {type(e).__name__}'] += 1
+            continue
+        valid, reason = validate_qa(qa)
+        if not valid:
+            rejections[reason] += 1
+            continue
+        results.append({
+            'question': qa['question'], 'reference_answer': qa['answer'],
+            'question_type': classify_question_type(qa['question']),
+            'question_subtype': 'single_specific',
+            'source_row_id': row['primary_id'], 'source_category_labels': None,
+            'source_text_preview': text[:100], 'hop_type': 'single', 'hop_source_ids': None,
+        })
+    print(f'single-hop: {len(results)}/{N_SINGLE_TARGET} in {attempts} attempts')
+    return results, rejections
+
+
+def run_aggregate(df, client, seed=42):
+    groups = sample_cross_category_groups(df, n_groups=N_AGG_BUDGET, group_size_range=(5, 10),
+                                            min_categories=3, seed=seed)
+    print(f'aggregate: found {len(groups)} candidate category-diverse groups (target budget {N_AGG_BUDGET})')
+    results, rejections, attempts = [], Counter(), 0
+    for g in groups:
+        if len(results) >= N_AGG_TARGET or attempts >= N_AGG_BUDGET:
+            break
+        attempts += 1
+        categories = sorted(set(r['aggregate_id'] for r in g))
+        try:
+            qa = generate_aggregate_qa(g, client=client, system_prompt=HISTORY_AGGREGATE_SYSTEM_PROMPT,
+                                        item_label='Book')
+        except ValueError as e:
+            rejections[f'API/parse: {type(e).__name__}'] += 1
+            continue
+        valid, reason = validate_qa(qa)
+        if not valid:
+            rejections[reason] += 1
+            continue
+        results.append({
+            'question': qa['question'], 'reference_answer': qa['answer'],
+            'question_type': classify_question_type(qa['question']),
+            'question_subtype': 'aggregate_cross_paper',
+            'source_row_id': None, 'source_category_labels': categories,
+            'source_text_preview': None, 'hop_type': 'single', 'hop_source_ids': None,
+        })
+    print(f'aggregate: {len(results)}/{N_AGG_TARGET} in {attempts} attempts')
+    return results, rejections
+
+
+def run_edge_multihop(df, client, seed=42):
+    pairs = sample_structural_edge_pairs(df, n_pairs=N_EDGE_BUDGET, seed=seed)
+    print(f'edge_multihop: sampled {len(pairs)} candidate structural_edges pairs')
+    results, rejections, attempts = [], Counter(), 0
+    for p in pairs:
+        if len(results) >= N_EDGE_TARGET or attempts >= N_EDGE_BUDGET:
+            break
+        attempts += 1
+        at = format_arxiv_row(p['anchor'])
+        tt = format_arxiv_row(p['target'])
+        if at is None or tt is None:
+            rejections['null_text'] += 1
+            continue
+        try:
+            qa = generate_edge_multihop_qa(
+                at, tt, shared_author='documented related work', client=client,
+                system_prompt=HISTORY_STRUCTURAL_EDGE_SYSTEM_PROMPT,
+                anchor_label='Book 1',
+                target_label='Book 2 (documented related work)',
+                connector_label='Connection',
+            )
+        except ValueError as e:
+            rejections[f'API/parse: {type(e).__name__}'] += 1
+            continue
+        anchor_title = p['anchor'].get('text_fidelity_b')
+        target_title = p['target'].get('text_fidelity_b')
+        valid, reason = validate_edge_multihop_titles(qa, anchor_title, target_title)
+        if not valid:
+            rejections[reason] += 1
+            continue
+        results.append({
+            'question': qa['question'], 'reference_answer': qa['answer'],
+            'question_type': classify_question_type(qa['question']),
+            'question_subtype': 'edge_multihop',
+            'source_row_id': None, 'source_category_labels': None,
+            'source_text_preview': None, 'hop_type': 'single',
+            'hop_source_ids': [p['anchor']['primary_id'], p['target']['primary_id']],
+        })
+    print(f'edge_multihop: {len(results)}/{N_EDGE_TARGET} in {attempts} attempts')
+    return results, rejections
+
+
+if __name__ == '__main__':
+    client = _client()
+    print('Loading history pool (sample_00-09, deduped)...')
+    df = load_pooled_samples(dataset='history')
+    print(f'  {len(df)} unique rows\n')
+
+    print('=== SINGLE-HOP ===')
+    single_results, single_rej = run_singlehop(df, client)
+
+    print('\n=== AGGREGATE ===')
+    agg_results, agg_rej = run_aggregate(df, client)
+
+    print('\n=== EDGE-MULTIHOP (structural_edges) ===')
+    edge_results, edge_rej = run_edge_multihop(df, client)
+
+    all_results = []
+    for i, r in enumerate(single_results):
+        all_results.append({'id': f'history_sh_{i:03d}', 'dataset': 'history', **r, 'multi_hop_stub': None})
+    for i, r in enumerate(agg_results):
+        all_results.append({'id': f'history_agg_{i:03d}', 'dataset': 'history', **r, 'multi_hop_stub': None})
+    for i, r in enumerate(edge_results):
+        all_results.append({'id': f'history_edge_{i:03d}', 'dataset': 'history', **r, 'multi_hop_stub': None})
+
+    out_df = pd.DataFrame(all_results, columns=[
+        'id', 'dataset', 'question', 'reference_answer', 'question_type', 'question_subtype',
+        'source_row_id', 'source_category_labels', 'source_text_preview', 'hop_type',
+        'multi_hop_stub', 'hop_source_ids',
+    ])
+    out_path = OUT_DIR / 'questions.csv'
+    out_df.to_csv(out_path, index=False)
+
+    print('\n' + '=' * 20, 'FINAL REPORT', '=' * 20)
+    print(f'Total: {len(single_results)} single / {len(agg_results)} aggregate / {len(edge_results)} edge_multihop '
+          f'({len(all_results)}/102)')
+
+    print('\nRejection breakdown:')
+    for label, rej in [('single', single_rej), ('aggregate', agg_rej), ('edge_multihop', edge_rej)]:
+        print(f'  {label}: {dict(rej) if rej else "none"}')
+
+    print('\nQuestion type distribution:')
+    for qt, n in Counter(r['question_type'] for r in all_results).most_common():
+        print(f'  {qt:<12} {n}')
+
+    print(f'\nSaved -> {out_path}')
+
+    print('\n3 example questions per subtype:')
+    for subtype, results in [('single_specific', single_results), ('aggregate_cross_paper', agg_results),
+                              ('edge_multihop', edge_results)]:
+        print(f'\n  {subtype}:')
+        for r in results[:3]:
+            print(f'    Q: {r["question"]}')

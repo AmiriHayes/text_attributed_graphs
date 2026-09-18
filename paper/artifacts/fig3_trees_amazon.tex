@@ -1,0 +1,55 @@
+\begin{figure}[htbp]
+\centering
+\footnotesize
+\begin{minipage}[t]{0.46\textwidth}
+\centering\textbf{Amazon Sports: node classification} ($n{=}26$, $R^2{=}0.998$)
+\begin{verbatim}
+|--- Node_Idx_N2 == 0
+|   |--- Node_Idx_N3 == 0
+|   |   |--- Text_Idx_T6a == 0
+|   |   |   |--- value: [3951.76]
+|   |   |--- Text_Idx_T6a == 1
+|   |   |   |--- value: [4128.29]
+|   |--- Node_Idx_N3 == 1
+|   |   |--- Edge_Idx_E5b == 0
+|   |   |   |--- value: [3854.92]
+|   |   |--- Edge_Idx_E5b == 1
+|   |   |   |--- value: [3979.17]
+|--- Node_Idx_N2 == 1
+|   |--- Edge_Idx_E5a == 0
+|   |   |--- Edge_Idx_E4b == 0
+|   |   |   |--- value: [1294.95]
+|   |   |--- Edge_Idx_E4b == 1
+|   |   |   |--- value: [1281.97]
+|   |--- Edge_Idx_E5a == 1
+|   |   |--- value: [1214.77]
+\end{verbatim}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.46\textwidth}
+\centering\textbf{Amazon Sports: GraphRAG retrieval} ($n{=}26$, $R^2{=}0.992$)
+\begin{verbatim}
+|--- Node_Idx_N2 == 0
+|   |--- Edge_Idx_E5b == 0
+|   |   |--- Edge_Idx_E5a == 0
+|   |   |   |--- value: [7075.90]
+|   |   |--- Edge_Idx_E5a == 1
+|   |   |   |--- value: [7415.40]
+|   |--- Edge_Idx_E5b == 1
+|   |   |--- Node_Idx_N3 == 0
+|   |   |   |--- value: [6483.26]
+|   |   |--- Node_Idx_N3 == 1
+|   |   |   |--- value: [6799.45]
+|--- Node_Idx_N2 == 1
+|   |--- Edge_Idx_E5a == 0
+|   |   |--- Edge_Idx_E5b == 0
+|   |   |   |--- value: [6681.28]
+|   |   |--- Edge_Idx_E5b == 1
+|   |   |   |--- value: [6763.30]
+|   |--- Edge_Idx_E5a == 1
+|   |   |--- value: [5436.04]
+\end{verbatim}
+\end{minipage}
+\caption{Decision trees fit on the same Amazon Sports constructions for two tasks, both on a 0--100 scale and capped at depth three. \textit{Left:} node classification. \textit{Right:} GraphRAG retrieval. Both tasks split first on node type and isolate N2, but they disagree below that split: text fidelity discriminates for classification, edge type for retrieval.}
+\label{fig:trees-amazon-gnn-graphrag}
+\end{figure}

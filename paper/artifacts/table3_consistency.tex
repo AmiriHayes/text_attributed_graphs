@@ -1,0 +1,63 @@
+\begin{table}[htbp]
+\centering
+\renewcommand{\arraystretch}{1.25}
+\small
+\setlength{\tabcolsep}{3.7pt}
+\caption{Decision trees trained on one dataset transfer to other datasets to varying degrees, evaluated separately for GNN and GraphRAG settings. \textit{Left:} cross-dataset Spearman $\rho$ (rows = training dataset, columns = target dataset; diagonal = within-dataset consistency; $^{*}p<0.05$ after Bonferroni correction over the 25 cells of each panel). \textit{Right:} normalized tree edit distance, within dataset and averaged over the four cross-dataset pairs (lower = more structurally similar). Variant counts match Table~\ref{tab:timing}.}
+\label{tab:dt_consistency}
+
+\vspace{0.5em}
+\textbf{GNN-Based Decision Tree Consistency}
+
+\begin{tabular}[t]{lccccc}
+\toprule
+$\rho$ & Hist & Sports & ArXiv & Elec & Toys \\
+\midrule
+Hist  & \textbf{+0.97*} & +0.72* & +0.75* & +0.65* & +0.68* \\
+Sports& +0.86* & \textbf{+0.98*} & +0.48\phantom{*} & +0.92* & +0.92* \\
+ArXiv & +0.86* & +0.50* & \textbf{+0.97*} & +0.48\phantom{*} & +0.48\phantom{*} \\
+Elec  & +0.48\phantom{*} & +0.95* & +0.50\phantom{*} & \textbf{+0.98*} & +0.94* \\
+Toys  & +0.65\phantom{*} & +0.93* & +0.47\phantom{*} & +0.93* & \textbf{+0.95*} \\
+\bottomrule
+\end{tabular}%
+\hspace{2em}
+\begin{tabular}[t]{lrcc}
+\toprule
+Dataset & $n$ & Within & Cross \\
+\midrule
+History       & 12 & \textbf{0.00} & 0.58 \\
+Amazon Sports & 39 & \textbf{0.05} & 0.46 \\
+ArXiv         & 24 & \textbf{0.09} & 0.43 \\
+Electronics   & 39 & \textbf{0.14} & 0.43 \\
+Toys          & 39 & \textbf{0.28} & 0.41 \\
+\bottomrule
+\end{tabular}
+
+\vspace{1em}
+\textbf{GraphRAG-Based Decision Tree Consistency}
+
+\begin{tabular}[t]{lccccc}
+\toprule
+$\rho$ & Hist & Sports & ArXiv & Elec & Toys \\
+\midrule
+Hist  & \textbf{+0.98*} & +0.03\phantom{*} & -0.12\phantom{*} & +0.04\phantom{*} & +0.18\phantom{*} \\
+Sports& +0.79\phantom{*} & \textbf{+0.81*} & +0.67\phantom{*} & +0.73* & +0.25\phantom{*} \\
+ArXiv & +0.59\phantom{*} & +0.57\phantom{*} & \textbf{+0.84*} & +0.72* & +0.06\phantom{*} \\
+Elec  & +0.57\phantom{*} & +0.76* & +0.81* & \textbf{+0.81*} & +0.13\phantom{*} \\
+Toys  & +0.78\phantom{*} & -0.03\phantom{*} & -0.26\phantom{*} & +0.19\phantom{*} & \textbf{+0.94*} \\
+\bottomrule
+\end{tabular}%
+\hspace{2em}
+\begin{tabular}[t]{lrcc}
+\toprule
+Dataset & $n$ & Within & Cross \\
+\midrule
+History       & 8  & \textbf{0.21} & 0.59 \\
+Amazon Sports & 26 & \textbf{0.26} & 0.34 \\
+ArXiv         & 16 & \textbf{0.13} & 0.47 \\
+Electronics   & 26 & \textbf{0.23} & 0.34 \\
+Toys          & 26 & \textbf{0.08} & 0.36 \\
+\bottomrule
+\end{tabular}
+
+\end{table}

@@ -1,0 +1,27 @@
+\begin{table*}[h]
+\centering
+\renewcommand{\arraystretch}{1.25}
+\caption{Cost of scoring the construction space relative to one full-scale model. \textbf{Scoring/variant} is the wall time to score one variant on the proxy evaluation: $150$ subsets of $1$k nodes for GNNs, $300$ questions for GraphRAG ($233$ for History). \textbf{Total scoring} sums over all valid variants. \textbf{Full-scale run} is one unguided variant at full data scale. \textbf{Whole-space cost} is the cost of scoring every variant in multiples of that run. GNN uses the five-subset plateau, where $\rho$ reaches $0.94$ to $0.98$; the full $150$-subset budget costs $75$ to $278\times$. GraphRAG uses its full budget, since its $\rho$ is still improving there. Variant counts include the no-text control, which GraphRAG cannot run.}
+\vspace{5pt}
+\label{tab:timing}
+\setlength{\tabcolsep}{3.6pt}
+\small
+\begin{tabular}{@{}l cc cc cc cc cc@{}}
+\toprule
+ & \multicolumn{2}{c}{Variants} & \multicolumn{2}{c}{Scoring/variant (min)}
+ & \multicolumn{2}{c}{Total scoring (hr)} & \multicolumn{2}{c}{Full-scale run (min)}
+ & \multicolumn{2}{c}{Whole-space cost} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
+\cmidrule(lr){8-9} \cmidrule(lr){10-11}
+Dataset & GNN & RAG & GNN & RAG & GNN & RAG & GNN & RAG & GNN & RAG \\
+\midrule
+ArXiv       & 24 & 16 & 10.4 & 10.6 & 4.15 & 2.82 & 3.12 & 6.41 & $\mathbf{2.7\times}$ & $26.4\times$ \\
+Amazon      & 39 & 26 & 7.4 & 7.8 & 4.80 & 3.39 & 3.23 & 7.40 & $\mathbf{3.0\times}$ & $27.5\times$ \\
+History     & 12 & 8 & 6.3 & 6.3 & 1.26 & 0.84 & 1.00 & 6.27 & $\mathbf{2.5\times}$ & $8.0\times$ \\
+Electronics & 39 & 26 & 7.2 & 6.4 & 4.69 & 2.78 & 1.36 & 6.83 & $\mathbf{6.9\times}$ & $24.5\times$ \\
+Toys        & 39 & 26 & 7.4 & 6.4 & 4.84 & 2.77 & 1.04 & 6.21 & $\mathbf{9.3\times}$ & $26.8\times$ \\
+\midrule
+\textbf{Total} & \textbf{153} & \textbf{102} & \textbf{7.7} & \textbf{7.4} & \textbf{19.74} & \textbf{12.61} & \textbf{9.75} & \textbf{33.11} & $\mathbf{4.0\times}$ & $\mathbf{22.8\times}$ \\
+\bottomrule
+\end{tabular}
+\end{table*}

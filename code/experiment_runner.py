@@ -28,6 +28,7 @@ Or run directly:
 import sys
 import os
 import math
+import time
 import traceback
 import logging
 from pathlib import Path
@@ -161,6 +162,9 @@ class ExperimentRunner:
         datasets: Optional[List[str]] = None,
         n_train_samples: int = N_TRAIN_SAMPLES,
         n_test_samples: int = N_TEST_SAMPLES,
+        record_wall_time: bool = False,
+        epoch_log_variants: Optional[List[str]] = None,
+        tasks: Optional[List[str]] = None,
     ):
         self.base_path   = Path(base_path)
         self.output_path = Path(output_path)
@@ -175,6 +179,16 @@ class ExperimentRunner:
         self.datasets    = datasets or DATASETS
         self.n_train_samples = n_train_samples
         self.n_test_samples  = n_test_samples
+
+        # Optional, CLI-gated infrastructure additions -- OFF by default, so
+        # default behavior (per-sample immediate CSV writes, no epoch
+        # logging) is byte-for-byte unchanged from before these existed.
+        # Both removable without touching any other code path.
+        self.record_wall_time  = record_wall_time
+        self.epoch_log_variants = set(epoch_log_variants or [])
+        # Optional M-task filter (e.g. ['M1']), temporary/removable, gated
+        # by --tasks -- unset (None) = every task type, unchanged default.
+        self.tasks = set(tasks) if tasks else None
 
         import torch
         if device:
@@ -224,6 +238,8 @@ class ExperimentRunner:
         self.logger.info(f"Resuming from {len(existing_keys)} existing rows in {csv_path}")
 
         all_variants = list(registry.enumerate_variants())
+        if self.tasks:
+            all_variants = [v for v in all_variants if v['M'] in self.tasks]
         n_variants   = len(all_variants)
         rows_written  = 0
 
@@ -233,6 +249,20 @@ class ExperimentRunner:
             task_type   = M_TO_TASK_TYPE[M]
 
             self.logger.info(f"[{v_idx+1}/{n_variants}] {dataset} | {variant_str} | task={task_type}")
+
+            # Skip variants whose node/edge/task axis was flagged degenerate
+            # by characterize_dataset.py's automatic dataset characterization
+            # (data/configs/{dataset}_dataset.yaml -> dataset_characterization
+            # -> recommended_exclusions, e.g. 'SKIP_N8', 'SKIP_N9', 'SKIP_M1').
+            # Absent block / empty list = no exclusions, nothing skipped.
+            recommended_exclusions = dm.config.get('dataset_characterization', {}) \
+                                               .get('recommended_exclusions', [])
+            axis_exclusion_flags = {f'SKIP_{M}', f'SKIP_{N}', f'SKIP_{E}', f'SKIP_{T}'}
+            hit = axis_exclusion_flags & set(recommended_exclusions)
+            if hit:
+                self.logger.info(f"  SKIP {variant_str}: flagged by dataset_characterization "
+                                  f"({', '.join(sorted(hit))})")
+                continue
 
             # ----------------------------------------------------------------
             # M5 / M6 — DEPRECATED global graph-level training path
@@ -355,6 +385,21 @@ class ExperimentRunner:
             # ----------------------------------------------------------------
             # M1-M4 — existing node/edge training path
             # ----------------------------------------------------------------
+            # record_wall_time buffers this variant's rows and writes them
+            # together at the end so one wall_time_seconds total (all
+            # train+test samples) can be attached to every row -- this is
+            # the only behavior change the flag causes; per-sample immediate
+            # writes (and therefore intra-variant resume) are only affected
+            # when the flag is explicitly on. Default (flag off): identical
+            # to before this existed.
+            variant_t0 = time.perf_counter() if self.record_wall_time else None
+            variant_row_buffer: list = []
+
+            epoch_log_path = None
+            if variant_str in self.epoch_log_variants:
+                epoch_log_dir = self.output_path / 'epoch_logs'
+                epoch_log_dir.mkdir(parents=True, exist_ok=True)
+
             for split in ['train', 'test']:
                 n_samples = self.n_train_samples if split == 'train' else self.n_test_samples
 
@@ -363,6 +408,11 @@ class ExperimentRunner:
                     resume_key = (M, N, E, T, split, sample_idx)
                     if resume_key in existing_keys:
                         continue
+
+                    if variant_str in self.epoch_log_variants:
+                        safe_variant = variant_str.replace('/', '_')
+                        epoch_log_path = str(self.output_path / 'epoch_logs' /
+                                              f'{safe_variant}_{split}{sample_idx:02d}.csv')
 
                     try:
                         result = self._run_one(
@@ -382,6 +432,8 @@ class ExperimentRunner:
                             compute_final_score_algebraic=compute_final_score_algebraic,
                             compute_m5_step1_score=compute_m5_step1_score,
                             compute_m6_step1_score=compute_m6_step1_score,
+                            epoch_log_path=epoch_log_path,
+                            experiment_id=f'{variant_str}_{split}{sample_idx:02d}',
                         )
                         if result is None:
                             continue
@@ -394,12 +446,20 @@ class ExperimentRunner:
                             derived_row['sample_idx'] = sample_idx
                             rows_to_write.append(derived_row)
 
-                        # Write main + derived rows atomically (same to_csv call)
-                        out_df = pd.DataFrame(rows_to_write)
-                        write_header = not csv_path.exists()
-                        out_df.to_csv(csv_path, mode='a', index=False, header=write_header)
-                        existing_keys.add(resume_key)
-                        rows_written += len(rows_to_write)
+                        if self.record_wall_time:
+                            # buffered -- written together once the whole
+                            # variant (all splits/samples) finishes below
+                            variant_row_buffer.extend(rows_to_write)
+                            existing_keys.add(resume_key)
+                            rows_written += len(rows_to_write)
+                        else:
+                            # unchanged default path: write main + derived
+                            # rows atomically (same to_csv call) as before
+                            out_df = pd.DataFrame(rows_to_write)
+                            write_header = not csv_path.exists()
+                            out_df.to_csv(csv_path, mode='a', index=False, header=write_header)
+                            existing_keys.add(resume_key)
+                            rows_written += len(rows_to_write)
 
                         pv = main_row['Primary_Value']
                         ns = main_row['normalized_score']
@@ -425,6 +485,20 @@ class ExperimentRunner:
                         self.logger.debug(traceback.format_exc())
                         continue
 
+            # record_wall_time: flush this variant's buffered rows now that
+            # every train+test sample is done, with a single wall_time_seconds
+            # total (perf_counter delta since the variant started) attached
+            # to all of them.
+            if self.record_wall_time and variant_row_buffer:
+                wall_time = time.perf_counter() - variant_t0
+                for row in variant_row_buffer:
+                    row['wall_time_seconds'] = round(wall_time, 3)
+                out_df = pd.DataFrame(variant_row_buffer)
+                write_header = not csv_path.exists()
+                out_df.to_csv(csv_path, mode='a', index=False, header=write_header)
+                self.logger.info(f"  [{variant_str}] wall_time_seconds={wall_time:.2f} "
+                                  f"({len(variant_row_buffer)} rows)")
+
         self.logger.info(f"Dataset '{dataset}' complete. Rows written this run: {rows_written}")
         self.logger.info(f"Output: {csv_path}")
 
@@ -433,6 +507,7 @@ class ExperimentRunner:
         ModelFactory, MLPModelFactory, GNNTrainer, build_result_row, mlp_cache,
         compute_step1_score, compute_final_score, compute_final_score_algebraic,
         compute_m5_step1_score, compute_m6_step1_score,
+        epoch_log_path=None, experiment_id=None,
     ):
         """Train GNN + MLP baseline for one (variant, split, sample_idx).
 
@@ -491,6 +566,7 @@ class ExperimentRunner:
         gnn_metrics = gnn_trainer.train(
             data=data, num_classes=output_dimension,
             verbose=self.verbose, early_stopping=self.early_stopping,
+            epoch_log_path=epoch_log_path, experiment_id=experiment_id,
         )
         s_gnn, r2_for_row = compute_step1_score(gnn_metrics, task_type)
 
@@ -617,7 +693,26 @@ def main():
                         help='Number of train samples per variant (default 10)')
     parser.add_argument('--n_test_samples',    type=int,   default=N_TEST_SAMPLES,
                         help='Number of test samples per variant (default 10)')
+    parser.add_argument('--record_wall_time',  action='store_true',
+                        help='Optional: add a wall_time_seconds column, one value per '
+                             'variant (total time across all its train+test samples), '
+                             'to construction_performance_table. OFF by default -- when '
+                             'off, output is identical to before this flag existed.')
+    parser.add_argument('--tasks', nargs='+', default=None,
+                        help='Optional: restrict to these M-task types only (e.g. --tasks M1). '
+                             'Unset = every task type, unchanged default.')
+    parser.add_argument('--epoch_log_variants', default=None,
+                        help='Optional: comma-separated list of FULL variant identifiers '
+                             'including the task prefix ("M1/N7/E10b/T12a" -- matches '
+                             'variant_str = f"{M}/{N}/{E}/{T}" exactly; a 3-part '
+                             '"N7/E10b/T12a" will silently never match) to enable '
+                             'per-epoch logging for. Logs go to '
+                             '{output_path}/epoch_logs/{variant}_{sample}.csv. Variants '
+                             'not listed are unaffected -- no epoch logging by default.')
     args = parser.parse_args()
+
+    epoch_log_variants = (args.epoch_log_variants.split(',') if args.epoch_log_variants
+                          else None)
 
     runner = ExperimentRunner(
         base_path=args.base_path,
@@ -631,6 +726,9 @@ def main():
         datasets=args.datasets,
         n_train_samples=args.n_train_samples,
         n_test_samples=args.n_test_samples,
+        record_wall_time=args.record_wall_time,
+        epoch_log_variants=epoch_log_variants,
+        tasks=args.tasks,
     )
     runner.run()
 
