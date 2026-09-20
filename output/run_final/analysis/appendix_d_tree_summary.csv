@@ -1,0 +1,6 @@
+dataset,n_variants,min_samples_leaf,max_depth,r2,depth,leaves,target_min,target_max
+arxiv,16,3,6,0.9722,2,4,0.38,0.84
+amazon,26,5,6,0.9961,2,4,0.12,0.42
+history,8,2,6,0.9263,2,3,0.31,0.4
+electronics,26,5,6,0.9971,2,4,0.11,0.57
+toys,26,5,6,0.9622,2,4,0.01,0.11

@@ -16,3 +16,25 @@ m2_transform: local_zscore
 # clustering (see AUDIT_pre_publication.md). k=5 empirically validated on
 # ArXiv/N7/T12a (RAGAS 0.359->0.639, raw_gnn unchanged p=0.302).
 k_structural: 5
+dataset_characterization:
+  secondary_id_singleton_fraction: null
+  secondary_id_real_hubs: 0
+  n8_viable: false
+  categorical_label_unique: 12
+  categorical_label_majority_fraction: 0.5608
+  m1_viable: true
+  aggregate_id_ratio: 0.0006
+  n9_viable: true
+  text_fidelity_b_distinct: true
+  e11b_degree_zero_fraction: null
+  warnings:
+  - 'NO_SECONDARY_ID: secondary_id is null for all rows'
+  recommended_exclusions:
+  - SKIP_N8
+  characterized_on: '2026-09-12'
+preprocessing:
+  preprocess_meta_join: false
+  preprocess_consolidate_categories: false
+  consolidation_threshold: 50
+  consolidation_target: 20
+  consolidation_drop_tail: false

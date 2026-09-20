@@ -1,0 +1,64 @@
+\begin{table}[htbp]
+\centering
+\renewcommand{\arraystretch}{1.25}
+\small
+\setlength{\tabcolsep}{3.7pt}
+
+\caption{Decision-tree consistency, computed separately for each task and each dataset. \textit{Left:} Spearman $\rho$ between the ranking predicted by a tree fit on the train pool and the actual ranking on the held-out test pool, with rows the dataset the tree was fit on and columns the dataset it was applied to. The diagonal is held-out validation within a dataset. $^{*}$ marks $p<0.05$ after Bonferroni correction over the 25 cells of that panel. \textit{Right:} normalized tree edit distance between the train-pool tree and the test-pool tree of the same dataset (Within), and the mean distance to the four other datasets' trees (Cross). Lower means structurally more similar. $n$ is the number of variants surviving the zero-score filter.}
+\label{tab:dt_consistency}
+
+\textbf{Node Classification}
+
+\begin{tabular}[t]{lccccc}
+\toprule
+$\rho$ & Hist & Sports & ArXiv & Elec & Toys \\
+\midrule
+Hist  & \textbf{+0.973*} & +0.721* & +0.755* & +0.654* & +0.678* \\
+Sports& +0.863* & \textbf{+0.981*} & +0.483\phantom{*} & +0.922* & +0.924* \\
+ArXiv & +0.856* & +0.504* & \textbf{+0.974*} & +0.477\phantom{*} & +0.478\phantom{*} \\
+Elec  & +0.477\phantom{*} & +0.949* & +0.501\phantom{*} & \textbf{+0.979*} & +0.942* \\
+Toys  & +0.645\phantom{*} & +0.926* & +0.475\phantom{*} & +0.934* & \textbf{+0.946*} \\
+\bottomrule
+\end{tabular}%
+\hspace{1.5em}
+\begin{tabular}[t]{lrcc}
+\toprule
+Dataset & $n$ & Within & Cross \\
+\midrule
+History     & 12 & \textbf{0.000} & 0.577 \\
+Sports      & 39 & \textbf{0.048} & 0.463 \\
+ArXiv       & 24 & \textbf{0.094} & 0.432 \\
+Electronics & 39 & \textbf{0.143} & 0.431 \\
+Toys        & 39 & \textbf{0.278} & 0.410 \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.5em}
+
+\textbf{GraphRAG Retrieval}
+
+\begin{tabular}[t]{lccccc}
+\toprule
+$\rho$ & Hist & Sports & ArXiv & Elec & Toys \\
+\midrule
+Hist  & \textbf{+0.976*} & +0.029\phantom{*} & -0.121\phantom{*} & +0.037\phantom{*} & +0.180\phantom{*} \\
+Sports& +0.788\phantom{*} & \textbf{+0.814*} & +0.667\phantom{*} & +0.735* & +0.247\phantom{*} \\
+ArXiv & +0.586\phantom{*} & +0.571\phantom{*} & \textbf{+0.840*} & +0.715* & +0.060\phantom{*} \\
+Elec  & +0.570\phantom{*} & +0.762* & +0.806* & \textbf{+0.805*} & +0.133\phantom{*} \\
+Toys  & +0.781\phantom{*} & -0.035\phantom{*} & -0.260\phantom{*} & +0.191\phantom{*} & \textbf{+0.941*} \\
+\bottomrule
+\end{tabular}%
+\hspace{1.5em}
+\begin{tabular}[t]{lrcc}
+\toprule
+Dataset & $n$ & Within & Cross \\
+\midrule
+History     & 8 & \textbf{0.214} & 0.589 \\
+Sports      & 26 & \textbf{0.261} & 0.342 \\
+ArXiv       & 16 & \textbf{0.133} & 0.469 \\
+Electronics & 26 & \textbf{0.229} & 0.342 \\
+Toys        & 26 & \textbf{0.083} & 0.364 \\
+\bottomrule
+\end{tabular}
+
+\end{table}

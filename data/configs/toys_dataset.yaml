@@ -27,3 +27,33 @@ k_structural: 5
 # is viable at the larger pooled GraphRAG-graph scale only. Left at 1 here
 # pending the targeted pooled-scale rerun (see rerun plan).
 minimum_hub_size: 1
+dataset_characterization:
+  secondary_id_singleton_fraction: 0.8675
+  secondary_id_real_hubs: 97
+  n8_viable: true
+  categorical_label_unique: 2
+  categorical_label_majority_fraction: 0.8688
+  m1_viable: true
+  aggregate_id_ratio: 0.8963
+  n9_viable: true
+  text_fidelity_b_distinct: true
+  e11b_degree_zero_fraction: 0.7267
+  warnings:
+  - 'WARN Check1: secondary_id singleton fraction 86.7% > 85% (N8 nodes mostly identical
+    to N7)'
+  - 'WARN Check2: categorical_label has only 2 unique value(s) (binary collapse)'
+  - 'WARN Check2: majority class is 86.9% of rows (> 80%)'
+  - 'NOTE Check2: m1_meta_url set -- raw categorical_label is NOT the true M1 label
+    space; label_factory.py rejoins against the meta category file. This check ran
+    on the pre-join label as a proxy.'
+  - 'WARN Check5: E10a density 75.4% > 50% of all possible pairs (near-complete graph)'
+  - 'WARN Check6: 72.7% of nodes have E10b-co-participation degree 0 (> 30%) -- E11b
+    k-NN-on-centrality risks degenerating under these tie conditions'
+  recommended_exclusions: []
+  characterized_on: '2026-09-12'
+preprocessing:
+  preprocess_meta_join: true
+  preprocess_consolidate_categories: true
+  consolidation_threshold: 50
+  consolidation_target: 20
+  consolidation_drop_tail: false

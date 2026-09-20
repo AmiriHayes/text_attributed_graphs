@@ -1,3 +1,0 @@
-approach,n_variants,time_min,time_min_high,api_cost_usd,measured_or_estimated
-Full survey (A),18,30.6,30.6,0.257,"time given, cost estimated"
-Single full-scale system (B),1,37.0,62.0,0.179,"fully estimated, not run (no API spend)"

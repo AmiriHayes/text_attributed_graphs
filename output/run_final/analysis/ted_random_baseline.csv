@@ -1,0 +1,11 @@
+dataset,modality,n_variants,real_ted,random_ted_mean,random_ted_std,n_seeds,ratio_real_over_random
+history,GNN,17,0.2168,0.2952,0.1161,100,0.734
+history,GraphRAG,8,0.0167,0.0633,0.0809,100,0.263
+amazon,GNN,65,0.3275,0.437,0.0813,100,0.749
+amazon,GraphRAG,26,0.1497,0.3101,0.0829,100,0.483
+arxiv,GNN,42,0.3639,0.4147,0.0808,100,0.878
+arxiv,GraphRAG,16,0.1608,0.3228,0.1449,100,0.498
+electronics,GNN,67,0.359,0.4358,0.0815,100,0.824
+electronics,GraphRAG,26,0.2525,0.3101,0.0829,100,0.814
+toys,GNN,47,0.4028,0.4166,0.076,100,0.967
+toys,GraphRAG,26,0.0717,0.3101,0.0829,100,0.231

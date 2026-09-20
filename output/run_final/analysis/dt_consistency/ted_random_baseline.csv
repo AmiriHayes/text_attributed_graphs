@@ -1,0 +1,11 @@
+task,dataset,n_variants,ted_within,random_mean,random_std,z
+node_classification,history,8,0.0,0.3003,0.1527,-1.97
+node_classification,amazon,26,0.0526,0.3932,0.0835,-4.08
+node_classification,arxiv,16,0.0455,0.3458,0.0985,-3.05
+node_classification,electronics,26,0.1667,0.3932,0.0835,-2.71
+node_classification,toys,26,0.1739,0.3932,0.0835,-2.63
+graphrag,history,8,0.2143,0.3003,0.1527,-0.56
+graphrag,amazon,26,0.2609,0.3932,0.0835,-1.58
+graphrag,arxiv,16,0.1333,0.3458,0.0985,-2.16
+graphrag,electronics,26,0.2292,0.3932,0.0835,-1.96
+graphrag,toys,26,0.0833,0.3932,0.0835,-3.71

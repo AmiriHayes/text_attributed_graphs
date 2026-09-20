@@ -1,8 +1,0 @@
-dataset,task_pair,shared_n,ranking_rho,ranking_p,tree_ted,m1_first_split,other_first_split,untrustworthy_low_n
-history,M1_vs_M3,4,0.8,0.2,0.667,Edge_Idx=E10c,(no split -- single leaf),True
-history,M1_vs_M4,4,0.6,0.4,0.667,Edge_Idx=E10c,(no split -- single leaf),True
-arxiv,M1_vs_M3,4,0.6,0.4,0.75,Text_Idx=T12a,(no split -- single leaf),True
-electronics,M1_vs_M3,3,-1.0,0.0,0.857,Node_Idx=N8,(no split -- single leaf),True
-electronics,M1_vs_M4,4,-0.6,0.4,0.857,Node_Idx=N8,(no split -- single leaf),True
-toys,M1_vs_M3,3,1.0,0.0,0.833,Node_Idx=N8,(no split -- single leaf),True
-toys,M1_vs_M4,2,,,,Node_Idx=N8,,True

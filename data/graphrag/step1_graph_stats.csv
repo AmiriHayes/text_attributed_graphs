@@ -1,6 +1,0 @@
-band,node_idx,edge_idx,text_idx,num_nodes,num_edges,largest_cc_pct,build_time_s,flagged,file_size_mb
-quintile_1,N8,E10c,T12a,24722,156281,21.04,3.2,True,44.8
-quintile_2,N8,E10c,T12b,24722,156281,21.04,2.4,True,44.8
-quintile_3,N8,E11a,T12b,24722,172046,39.0,11.1,False,45.3
-quintile_4,N7,E11b,T12a,9178,447618,56.33,8.3,False,29.1
-quintile_5,N7,E11b,T12b,9178,447618,56.33,8.2,False,29.1

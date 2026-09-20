@@ -211,8 +211,13 @@ variants:
   # M2 excluded — see dataset context above.
 
   M3:  # edge categorical — N7, N8 only. GT edges only (C2). E10a excluded (C4). E10c excluded (bipartite, no N-N edges)
+       # E11a permitted (Appendix A): semantic-similarity edges are N-N and give the
+       # edge-classification variant space enough width to fit a tree. E11b stays
+       # excluded — it is built from centrality, not semantic features.
     - {N: N7, E: E10b}
     - {N: N8, E: E10b}
+    - {N: N7, E: E11a}
+    - {N: N8, E: E11a}
 
   # M4 excluded — cascades from M2 exclusion.
 
@@ -254,8 +259,12 @@ remove_list:
     reason: "C4 (M3) — E10a directly encodes the M3 same-category label; (M4) E10a binary GT edges have no natural scalar label."
   - rule: "(M3, *, E10c), (M4, *, E10c)"
     reason: "Structural — E10c is bipartite (paper-author), produces no N-N edges for an edge-pair label of type N — see structural_notes."
-  - rule: "(M3, *, E11*), (M4, *, E11*)"
-    reason: "C2 — similarity edges carry no edge-level supervision signal."
+  - rule: "(M3, *, E11b), (M3, *, E11c), (M4, *, E11*)"
+    reason: "C2 — similarity edges carry no edge-level supervision signal. E11a is
+      exempted for M3 only (Appendix A edge-task demonstration): it is the sole
+      N-N similarity construction, and without it M3 has a single edge level and
+      cannot support a decision tree. E11b/E11c remain excluded for M3, and all
+      E11 remain excluded for M4."
   - rule: "(M3, N9, *), (M4, N9, *)"
     reason: "Edge-pair tasks between category-nodes are undefined (no natural N9-N9 'same category' or 'centrality diff' framing distinct from M2/M5/M6)."
 

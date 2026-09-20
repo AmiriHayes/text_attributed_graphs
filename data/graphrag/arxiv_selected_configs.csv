@@ -1,6 +1,0 @@
-band,node_idx,edge_idx,text_idx,train_mean,band_range
-quintile_1,N8,E10c,T12a,84.2,84.09-84.20
-quintile_2,N8,E10c,T12b,83.96,77.11-83.96
-quintile_3,N8,E11a,T12b,76.96,75.51-76.96
-quintile_4,N7,E11b,T12a,54.67,54.01-54.67
-quintile_5,N7,E11b,T12b,38.97,38.13-38.97

@@ -199,8 +199,10 @@ variants:
     - {N: N9, E: E11b}
 
   M3:  # edge categorical — N7 only, GT edges only (C2), E10a excluded (C4)
+       # E11a permitted (Appendix A) — see arxiv_variants.yaml for the rationale.
     - {N: N7, E: E10b}
     - {N: N7, E: E10c}
+    - {N: N7, E: E11a}
 
   M4:  # edge scalar — N7 only, GT edges only (C2), E10a excluded (no natural scalar label)
     - {N: N7, E: E10b}
@@ -247,8 +249,10 @@ remove_list:
     reason: "structural — 'same/shared category' undefined when nodes ARE categories — see structural_notes"
   - rule: "(M3, N7, E10a), (M4, N7, E10a)"
     reason: "C4 (M3) — E10a directly encodes the M3 same-category label; (M4) E10a binary GT edges have no natural scalar label"
-  - rule: "(M3, *, E11*), (M4, *, E11*)"
-    reason: "C2 — similarity edges (E11a/E11b/E11c) carry no edge-level supervision signal"
+  - rule: "(M3, *, E11b), (M3, *, E11c), (M4, *, E11*)"
+    reason: "C2 — similarity edges carry no edge-level supervision signal.
+      E11a exempted for M3 only (Appendix A edge-task demonstration);
+      E11b/E11c remain excluded for M3, all E11 excluded for M4."
 
 # ─────────────────────────────────────────────────────────────────────────
 # SUMMARY

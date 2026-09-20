@@ -28,3 +28,27 @@ k_structural: 5
 # is viable at the larger pooled GraphRAG-graph scale only. Left at 1 here
 # pending the targeted pooled-scale rerun (see rerun plan).
 minimum_hub_size: 1
+dataset_characterization:
+  secondary_id_singleton_fraction: 0.9798
+  secondary_id_real_hubs: 59
+  n8_viable: true
+  categorical_label_unique: 18
+  categorical_label_majority_fraction: 0.204
+  m1_viable: true
+  aggregate_id_ratio: 0.0006
+  n9_viable: true
+  text_fidelity_b_distinct: true
+  e11b_degree_zero_fraction: 0.9933
+  warnings:
+  - 'WARN Check1: secondary_id singleton fraction 98.0% > 85% (N8 nodes mostly identical
+    to N7)'
+  - 'WARN Check6: 99.3% of nodes have E10b-co-participation degree 0 (> 30%) -- E11b
+    k-NN-on-centrality risks degenerating under these tie conditions'
+  recommended_exclusions: []
+  characterized_on: '2026-09-12'
+preprocessing:
+  preprocess_meta_join: false
+  preprocess_consolidate_categories: false
+  consolidation_threshold: 50
+  consolidation_target: 20
+  consolidation_drop_tail: false
