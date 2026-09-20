@@ -132,7 +132,16 @@ def node_classification_variants(ds: str) -> pd.DataFrame:
     """150 subsets, 75 train / 75 test, scored by the normalized GNN score."""
     df = pd.read_csv(RUN / f'construction_performance_table_{ds}.csv')
     df = df[df['Task_Idx'] == NODE_CLASSIFICATION_ROWS].copy()
-    score = 'S_GNN_step1' if 'S_GNN_step1' in df.columns else 'normalized_score'
+    # No fallback: S_GNN_step1 is a 0-1 pseudo-R2 while normalized_score runs
+    # 0-70 on the same rows, so silently substituting one changes every
+    # published number by roughly two orders of magnitude.
+    if 'S_GNN_step1' not in df.columns:
+        raise KeyError(
+            f"{ds}: construction table has no 'S_GNN_step1' column "
+            f"(found: {sorted(df.columns)[:8]}...). Re-run "
+            "code/experiment_runner.py; do not substitute 'normalized_score', "
+            "which is on a different scale.")
+    score = 'S_GNN_step1'
     return _pool_means(df, df['run_split'], score)
 
 
@@ -321,13 +330,20 @@ def latex(results: dict, alpha_raw: float = 0.05) -> str:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--out', default=str(OUT))
+    ap.add_argument('--out', default=None,
+                    help='Defaults to analysis/dt_consistency for the '
+                         'control-excluded run and analysis/'
+                         'dt_consistency_with_control when --include_control '
+                         'is set, so the two can never overwrite each other.')
     ap.add_argument('--include_control', action='store_true',
                     help='Keep the no-text control in the node-classification '
                          'variant set so counts match the cost table. Inflates rho.')
     args = ap.parse_args()
     global INCLUDE_CONTROL
     INCLUDE_CONTROL = args.include_control
+    if args.out is None:
+        args.out = str(RUN / 'analysis' / ('dt_consistency_with_control'
+                                           if INCLUDE_CONTROL else 'dt_consistency'))
     print(f'no-text control: {"INCLUDED" if INCLUDE_CONTROL else "excluded"}')
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)

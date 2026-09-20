@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
 """
+SUPERSEDED BY code/dt_consistency.py -- do not use for new work.
+It fits the same published quantity with min_samples_leaf=3, which
+makes one-hot edge splits unreachable once the no-text control is
+dropped; exposes only three of the five datasets in its CLI; and
+reads output/construction_performance_table_*.csv, a path that no
+longer exists. Retained because the files under
+output/run_final/analysis/superseded/ were produced by it.
+
 Fits a decision tree per dataset (plus a combined tree) predicting variant
 mean score from the one-hot-encoded (Task, Node, Edge, Text) construction
 axes, and renders each as an annotated PNG. Also exposes a programmatic API
@@ -9,7 +17,7 @@ directly instead of this file's own CLI.
 Reads:
   - output/construction_performance_table_{dataset}.csv
     (dataset in {history, amazon, arxiv} for the CLI's --dataset flag —
-    see code/AUDIT_yaml_hardcoding.md finding #1: electronics/toys are not
+    see docs/AUDIT_yaml_hardcoding.md finding #1: electronics/toys are not
     valid --dataset choices in this file's CLI, unlike the programmatic API)
 
 Writes:

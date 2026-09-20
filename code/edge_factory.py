@@ -3,7 +3,7 @@ Builds the edge list for a given (edge_type, node_type) pair, dispatching
 dataset-specific edge shape via config flags read from the dataset's YAML
 (secondary_id_is_list, has_structural_edges, has_secondary_id) rather than
 branching on dataset name. E11c is deprecated (raises NotImplementedError —
-see code/AUDIT_pre_publication.md FIX 1); E11b's k defaults to 5, overridable
+see docs/AUDIT_pre_publication.md FIX 1); E11b's k defaults to 5, overridable
 via the k_structural kwarg (see FIX 3).
 
 Reads:
@@ -70,7 +70,7 @@ class EdgeFactory:
             return EdgeFactory._build_structural_similarity(node_list, base_graph, k=k)
         
         elif edge_type == 'E11c':
-            # DEPRECATED (pre-publication audit, see code/AUDIT_pre_publication.md
+            # DEPRECATED (pre-publication audit, see docs/AUDIT_pre_publication.md
             # FIX 1). E11c was documented as "functional similarity based on node
             # categories" but the implementation called _build_categorical_gt --
             # the exact same function as E10a, with the same arguments. Every
@@ -107,7 +107,7 @@ class EdgeFactory:
                 "E11c is deprecated (pre-publication audit FIX 1): the previous "
                 "implementation was an undocumented alias for E10a (identical "
                 "edges, not merely similar). It has been removed rather than "
-                "kept as a silent duplicate. See code/AUDIT_pre_publication.md "
+                "kept as a silent duplicate. See docs/AUDIT_pre_publication.md "
                 "FIX 1 for the full reasoning and remove E11c rows from "
                 "{dataset}_variants.yaml before use."
             )
@@ -533,7 +533,7 @@ class EdgeFactory:
         Each node is connected to its k most centrality-similar neighbors.
 
         DEGENERATE CONDITION (pre-publication audit, see
-        code/AUDIT_pre_publication.md FIX 3): the previous default, k=50,
+        docs/AUDIT_pre_publication.md FIX 3): the previous default, k=50,
         degenerates into a near-complete graph whenever centrality values
         cluster tightly -- which is common, not an edge case. Centrality is
         computed over E10b's ground-truth graph, and a large fraction of
@@ -554,7 +554,7 @@ class EdgeFactory:
 
         EMPIRICALLY VALIDATED FIX: k=5 (ArXiv, N7, T12a, pooled 9,178-node
         graph). Edge count: 447,618 (k=50) -> 45,686 (k=5), a 90% reduction.
-        Validation experiment (see AUDIT_pre_publication.md FIX 3 for full
+        Validation experiment (see docs/AUDIT_pre_publication.md FIX 3 for full
         detail):
           - raw_gnn (GraphSAGE, M1, n=10 samples): k=50 mean=55.79 (std
             2.62) vs. k=5 mean=54.34 (std 3.42). Welch's t-test t=-1.065,

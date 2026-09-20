@@ -16,7 +16,7 @@ targets in the manuscript.
 | Figure 1 | hand-drawn, not generated | `centerpiece_tag_paper.pdf` (external) |
 | Figure 2 | `make_fig2_amazon.py` | `fig_amazon_combined_performance.pdf` |
 | Figure 3 | `make_trees.py` | `fig3_trees_amazon.tex` |
-| Figure 4 | `make_fig4_stability.py` | `fig_stability_dual.pdf` |
+| Figure 4 | `make_fig4_stability.py` | `fig4_stability_dual.pdf` |
 | Figure 5 | `make_fig5_construction.py` | 8 × `fig_<dataset>_<task>_performance_runfinal.pdf` |
 | Figure 6 | `make_trees.py` | `fig6_trees_appendix.tex` |
 | Table 3 | `make_table3.py` | `table3_consistency.tex` |
@@ -48,7 +48,21 @@ cross-dataset transfer on the GNN side, because all five datasets agree that
 text beats no text. `make_table3.py --no-control` reproduces the conservative
 version.
 
-## Regenerating the run itself
+## One-hot tie-breaking in the tree figures
 
-`paper/` reads `output/run_final/` and never writes to it. To rebuild that
-directory from raw data, see the root `README.md`.
+Some splits in Figures 3 and 6 are labelled with a different but equivalent
+one-hot feature than the manuscript shows, e.g. `Node_Idx_N1 == 0` where the
+PDF has `Node_Idx_N2 == 1`. On a dataset with two node types those are the
+same partition, and the leaf values are identical. This is scikit-learn
+breaking a tie between equal-gain splits, not a discrepancy.
+
+## What paper/ writes
+
+`paper/` treats the raw scores in `output/run_final/` as read-only, but two
+steps do refresh derived analysis in place: `make_table3.py` re-runs
+`code/dt_consistency.py` into `analysis/dt_consistency_with_control/`, and
+`make_table4.py` re-runs `code/build_table5_timing.py`, which rewrites
+`analysis/timing_table_plateau.csv`. Pass `--skip-refresh` to either to format
+the existing analysis without recomputing it.
+
+To rebuild `output/run_final/` itself from raw data, see the root `README.md`.

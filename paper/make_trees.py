@@ -39,7 +39,7 @@ def fit_one(ds, task):
     v = D.TASKS[task](ds)
     enc = OneHotEncoder(sparse_output=False, handle_unknown='ignore')
     X = enc.fit_transform(v[AXES])
-    y = v['train_mean'].to_numpy(float) * 100
+    y = v['train_mean'].to_numpy(float)   # already on the 0-100 scale
     t = DecisionTreeRegressor(criterion='squared_error', max_depth=MAX_DEPTH,
                               min_samples_leaf=MIN_LEAF, random_state=42).fit(X, y)
     txt = export_text(t, feature_names=list(enc.get_feature_names_out(AXES)),

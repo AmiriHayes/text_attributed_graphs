@@ -46,7 +46,7 @@ def run(key, label, script, args):
 
 # Every generator writes into paper/artifacts/. Names here are exactly the
 # \includegraphics targets in the .tex, so a missing entry is a broken figure.
-FIGURES = ['fig_amazon_combined_performance', 'fig_stability_dual'] + [
+FIGURES = ['fig_amazon_combined_performance', 'fig4_stability_dual'] + [
     f'fig_{d}_{t}_performance_runfinal'
     for d in ['arxiv', 'electronics', 'toys', 'history']
     for t in ['construction', 'graphrag']]

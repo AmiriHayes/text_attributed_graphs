@@ -10,7 +10,7 @@ Epoch-log source per dataset is resolved here rather than passed by hand:
 Rule A selects variants that the main run did not log, so four datasets have
 a side-run under output/run_final/epoch_logs_ruleA/.
 
-Writes:  output/figures/fig_{dataset}_{construction,graphrag}_performance_runfinal.pdf
+Writes:  paper/artifacts/fig_{dataset}_{construction,graphrag}_performance_runfinal.pdf
 
 Usage:   python3 paper/make_fig5_construction.py            # appendix four
          python3 paper/make_fig5_construction.py --all      # plus Amazon

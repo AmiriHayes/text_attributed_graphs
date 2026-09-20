@@ -25,10 +25,10 @@ the corresponding diagonal entry of Table 3 exactly.  That identity is the
 figure's correctness check and is asserted at the end of the run.
 
 Reads:   the same files as dt_consistency.py
-Writes:  paper/artifacts/fig_stability_dual.{pdf,png}
+Writes:  paper/artifacts/fig4_stability_dual.{pdf,png}
          output/run_final/analysis/dt_consistency/stability_curve.csv
 
-Usage:   python3 code/fig_stability_dual.py
+Usage:   python3 paper/make_fig4_stability.py
 """
 import argparse
 import sys
@@ -163,7 +163,7 @@ def main():
     axes[1].legend(fontsize=8.5, loc='lower right', frameon=True, framealpha=0.92)
     fig.tight_layout()
     for ext in ('pdf', 'png'):
-        fig.savefig(FIG_DIR / f'fig_stability_dual.{ext}', dpi=200,
+        fig.savefig(FIG_DIR / f'fig4_stability_dual.{ext}', dpi=200,
                     bbox_inches='tight', facecolor='white')
 
     df = pd.concat(all_rows, ignore_index=True)
@@ -183,7 +183,7 @@ def main():
             print(f'{task:20s}{ds:13s}{end["mean"]:15.4f}{ref:13.4f}{end["std"]:7.1e}'
                   + ('' if match else '   MISMATCH'))
     print(f'\nendpoints reproduce Table 3: {ok}')
-    print(f'wrote {FIG_DIR}/fig_stability_dual.pdf')
+    print(f'wrote {FIG_DIR}/fig4_stability_dual.pdf')
 
 
 if __name__ == '__main__':

@@ -32,7 +32,7 @@ class VariantRegistry:
         Initialize variant registry.
         
         Args:
-            dataset: 'arxiv', 'amazon', or 'history'
+            dataset: one of arxiv, amazon, history, electronics, toys
             config_path: Path to configs directory
         """
         self.dataset = dataset
@@ -189,4 +189,3 @@ class VariantRegistry:
         
         return sum(1 for _ in self.enumerate_variants(text_fidelities))
 
-# Made with Bob

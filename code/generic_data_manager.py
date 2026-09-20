@@ -4,7 +4,7 @@ amazon, history, electronics, toys). All dataset-specific behavior is driven
 by {dataset}_dataset.yaml config keys (has_secondary_id, secondary_id_is_list,
 has_structural_edges, m1_meta_url, m2_source, scalar_label_transform,
 m2_transform, minimum_hub_size, embedding_prefix, etc.) rather than branching
-on the dataset name — see code/AUDIT_yaml_hardcoding.md for the full audit.
+on the dataset name — see docs/AUDIT_yaml_hardcoding.md for the full audit.
 
 Reads:
   - data/configs/{dataset}_dataset.yaml

@@ -55,7 +55,7 @@ question-budget reduction is claimed only where the curve justifies one.
 
 Reads:
   - output/run_final/analysis/timing_table_raw.csv
-  - output/run_final/analysis/gnn_rho_vs_subsets_multiseed_{dataset}.csv
+  - output/run_final/analysis/dt_consistency_with_control/stability_curve.csv
   - output/run_final/ragas_results_{dataset}.csv   (measured 300q per-variant time)
 
 Writes:
