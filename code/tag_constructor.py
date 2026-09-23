@@ -81,8 +81,8 @@ class TAGConstructor:
                     base_graph.add_edge(edge[0], edge[1])
             extra_kwargs['base_graph'] = base_graph
             # k_structural: configurable via {dataset}_dataset.yaml, defaults
-            # to 5 (see docs/AUDIT_pre_publication.md FIX 3 -- k=50 default was
-            # found to degenerate under centrality-tie clustering).
+            # to 5 (k=50 degenerates under centrality-tie clustering; see
+            # _build_structural_similarity in edge_factory.py for the evidence).
             extra_kwargs['k_structural'] = self.data_manager.config.get('k_structural', 5)
 
         # Build edges

@@ -16,9 +16,9 @@ directly instead of this file's own CLI.
 
 Reads:
   - output/construction_performance_table_{dataset}.csv
-    (dataset in {history, amazon, arxiv} for the CLI's --dataset flag —
-    see docs/AUDIT_yaml_hardcoding.md finding #1: electronics/toys are not
-    valid --dataset choices in this file's CLI, unlike the programmatic API)
+    (dataset in {history, amazon, arxiv} for the CLI's --dataset flag;
+    electronics/toys are not valid --dataset choices here, unlike the
+    programmatic API)
 
 Writes:
   - output/decision_trees/decision_tree_{scenario}.png

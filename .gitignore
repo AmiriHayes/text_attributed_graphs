@@ -71,3 +71,6 @@ paper/artifacts/*.png
 data/graphrag/*.pkl
 data/graphrag/generated_batches/
 data/*/author_lookup_cache.csv
+
+# Internal audit notes, local only
+docs/
