@@ -1,0 +1,151 @@
+% Candidate additions for TACO-Graph related work.
+% Titles + author lists verified against the arXiv API (authoritative), NOT taken
+% from Semantic Scholar, which normalises names incorrectly (e.g. "Xiao-Xin He"
+% for "Xiaoxin He", "F. Geerts" for "Floris Geerts") and truncates long lists.
+% VENUE fields marked [S2-unverified] come from Semantic Scholar only and should
+% be checked before submission -- S2 mislabelled 4DBInfer as "VLDB Workshops"
+% when it is NeurIPS 2024 D&B.
+
+% ---------- A. Automated graph construction (closest to TACO-Graph) ----------
+
+@inproceedings{rdb2gbench2025,
+  title={{RDB2G-Bench}: A Comprehensive Benchmark for Automatic Graph Modeling of Relational Databases},
+  author={Choi, Dongwon and Kim, Sunwoo and Kim, Juyeon and Kim, Kyungho and
+          Lee, Geon and Kang, Shinhwan and Kim, Myunghwan and Shin, Kijung},
+  booktitle={Advances in Neural Information Processing Systems (Datasets and Benchmarks Track)},
+  year={2025},
+  note={arXiv:2506.01360; code at https://github.com/chlehdwon/RDB2G-Bench}
+}
+
+@article{autograble2026,
+  title={{AutoGrable}: What Is a Good Graph for a Table?},
+  author={Cucumides, Tamara and Geerts, Floris},
+  journal={arXiv preprint arXiv:2608.11431},
+  year={2026}
+}
+
+@inproceedings{wang20244dbinfer,
+  title={{4DBInfer}: A {4D} Benchmarking Toolbox for Graph-Centric Predictive Modeling on Relational {DB}s},
+  author={Wang, Minjie and Gan, Quan and Wipf, David and Cai, Zhenkun and Li, Ning and
+          Tang, Jianheng and Zhang, Yanlin and Zhang, Zizhao and Mao, Zunyao and Song, Yakun and
+          Wang, Yanbo and Li, Jiahang and Zhang, Han and Yang, Guang and Qin, Xiao and Lei, Chuan and
+          Zhang, Muhan and Zhang, Weinan and Faloutsos, Christos and Zhang, Zheng},
+  booktitle={Advances in Neural Information Processing Systems (Datasets and Benchmarks Track)},
+  year={2024},
+  note={arXiv:2404.18209; code at https://github.com/awslabs/multi-table-benchmark}
+}
+
+% NOTE: same author group as AutoG -- this is the AutoG team's follow-up.
+@article{relatron2026,
+  title={{Relatron}: Automating Relational Machine Learning over Relational Databases},
+  author={Chen, Zhikai and Xie, Han and Zhang, Jian and Tang, Jiliang and
+          Song, Xiang and Rangwala, Huzefa},
+  journal={arXiv preprint arXiv:2602.22552},
+  year={2026}
+}
+
+@article{schemagraphs2026,
+  title={Is Fixing Schema Graphs Necessary? Full-Resolution Graph Structure Learning
+         for Relational Deep Learning},
+  author={Huang, Yi and Sun, Qingyun and Li, Jia and Fu, Xingcheng and Li, Jianxin},
+  journal={arXiv preprint arXiv:2605.21475},
+  year={2026}
+}
+
+@inproceedings{gan2024multitable,
+  title={Graph Machine Learning Meets Multi-Table Relational Data},
+  author={Gan, Quan and Wang, Minjie and Wipf, David and Faloutsos, Christos},
+  booktitle={Proceedings of the 30th ACM SIGKDD Conference on Knowledge Discovery and Data Mining},
+  year={2024},
+  note={DOI 10.1145/3637528.3671471}
+}
+
+@article{li2024gnn4tdl,
+  title={Graph Neural Networks for Tabular Data Learning: A Survey with Taxonomy and Directions},
+  author={Li, Cheng-Te and Tsai, Yu-Che and Chen, Chih-Yao and Liao, Jay Chiehen},
+  journal={ACM Computing Surveys},
+  year={2024},
+  note={arXiv:2401.02143; DOI 10.1145/3744918}
+}
+
+@inproceedings{griffin2025,
+  title={{Griffin}: Towards a Graph-Centric Relational Database Foundation Model},
+  author={Wang, Yanbo and Wang, Xiyuan and Gan, Quan and Wang, Minjie and
+          Yang, Qibin and Wipf, David and Zhang, Muhan},
+  booktitle={International Conference on Machine Learning},
+  year={2025},
+  note={arXiv:2505.05568 [S2-unverified venue]}
+}
+
+@article{graphmaster2025,
+  title={{GraphMaster}: Automated Graph Synthesis via {LLM} Agents in Data-Limited Environments},
+  author={Du, Enjun and Li, Xunkai and Jin, Tian and Zhang, Zhihan and
+          Li, Rong-Hua and Wang, Guoren},
+  journal={arXiv preprint arXiv:2504.00711},
+  year={2025},
+  note={[S2 reports NeurIPS 2025 -- verify]}
+}
+
+% ---------- B. TAG construction / methodology ----------
+
+@article{rose2024,
+  title={Unleashing the Potential of Text-attributed Graphs: Automatic Relation
+         Decomposition via Large Language Models},
+  author={Seo, Hyunjin and Kim, Taewon and Yang, June Yong and Yang, Eunho},
+  journal={arXiv preprint arXiv:2405.18581},
+  year={2024}
+}
+
+@article{taglas2024,
+  title={{TAGLAS}: An Atlas of Text-Attributed Graph Datasets in the Era of Large
+         Graph and Language Models},
+  author={Feng, Jiarui and Liu, Hao and Kong, Lecheng and Zhu, Mingfang and
+          Chen, Yixin and Zhang, Muhan},
+  journal={arXiv preprint arXiv:2406.14683},
+  year={2024}
+}
+
+@inproceedings{tegdb2024,
+  title={{TEG-DB}: A Comprehensive Dataset and Benchmark of Textual-Edge Graphs},
+  author={Li, Zhuofeng and Gou, Zixing and Zhang, Xiangnan and Liu, Zhongyuan and
+          Li, Sirui and Hu, Yuntong and Ling, Chen and Zhang, Zheng and Zhao, Liang},
+  booktitle={Advances in Neural Information Processing Systems (Datasets and Benchmarks Track)},
+  year={2024},
+  note={arXiv:2406.10310}
+}
+
+@article{mshtag2024,
+  title={Multi-Scale Heterogeneous Text-Attributed Graph Datasets From Diverse Domains},
+  author={Liu, Yunhui and Xie, Qizhuo and Shi, Jinwei and Shen, Jiaxu and He, Tieke},
+  journal={arXiv preprint arXiv:2412.08937},
+  year={2024},
+  note={[S2 reports The Web Conference 2025 -- verify]}
+}
+
+@article{unigraph2024,
+  title={{UniGraph}: Learning a Unified Cross-Domain Foundation Model for Text-Attributed Graphs},
+  author={He, Yufei and Sui, Yuan and He, Xiaoxin and Hooi, Bryan},
+  journal={arXiv preprint arXiv:2402.13630},
+  year={2024},
+  note={[S2 reports KDD -- verify]}
+}
+
+% ---------- D. AutoML / NAS adaptations ----------
+
+@article{autogl2021,
+  title={{AutoGL}: A Library for Automated Graph Learning},
+  author={Zhang, Ziwei and Qin, Yijian and Zhang, Zeyang and Guan, Chaoyu and Cai, Jie and
+          Chang, Heng and Jiang, Jiyan and Li, Haoyang and Sun, Zixin and Xie, Beini and
+          Yao, Yang and Zhang, Yipeng and Wang, Xin and Zhu, Wenwu},
+  journal={arXiv preprint arXiv:2104.04987},
+  year={2021}
+}
+
+@inproceedings{caafe2023,
+  title={Large Language Models for Automated Data Science: Introducing {CAAFE}
+         for Context-Aware Automated Feature Engineering},
+  author={Hollmann, Noah and M{\"u}ller, Samuel and Hutter, Frank},
+  booktitle={Advances in Neural Information Processing Systems},
+  year={2023},
+  note={arXiv:2305.03403}
+}

@@ -1,0 +1,98 @@
+[
+ {
+  "seed_name": "AutoG",
+  "paperId": "4f166d4d8000af25380060935d62ddf9f002f7d2",
+  "title": "AutoG: Towards automatic graph construction from tabular data",
+  "year": 2025,
+  "citationCount": 10,
+  "venue": "International Conference on Learning Representations"
+ },
+ {
+  "seed_name": "UltraTAG",
+  "paperId": "86719c7662413a302084f6d88876b7cd08b0d4c5",
+  "title": "Toward General and Robust LLM-enhanced Text-attributed Graph Learning",
+  "year": 2025,
+  "citationCount": 11,
+  "venue": "International Conference on Multimedia Retrieval"
+ },
+ {
+  "seed_name": "TAPE",
+  "paperId": "2d2b05f0969568ac3fd3c2cca5df04c4136c5416",
+  "title": "Harnessing Explanations: LLM-to-LM Interpreter for Enhanced Text-Attributed Graph Representation Learning",
+  "year": 2023,
+  "citationCount": 181,
+  "venue": "International Conference on Learning Representations"
+ },
+ {
+  "seed_name": "GLEM",
+  "paperId": "8bb37e8ae7dd6fa8cab2407f63a61f697152717f",
+  "title": "Learning on Large-scale Text-attributed Graphs via Variational Inference",
+  "year": 2022,
+  "citationCount": 245,
+  "venue": "International Conference on Learning Representations"
+ },
+ {
+  "seed_name": "OFA",
+  "paperId": "ab22d54dd13876d25c6c8f46c40fb9ac41c61ec5",
+  "title": "One for All: Towards Training One Graph Model for All Classification Tasks",
+  "year": 2023,
+  "citationCount": 315,
+  "venue": "International Conference on Learning Representations"
+ },
+ {
+  "seed_name": "CS-TAG",
+  "paperId": "b82662394b2b39836e64f07e1605559965643a9b",
+  "title": "A Comprehensive Study on Text-attributed Graphs: Benchmarking and Rethinking",
+  "year": 2023,
+  "citationCount": 169,
+  "venue": "Neural Information Processing Systems"
+ },
+ {
+  "seed_name": "GraphRAG",
+  "paperId": "c1799bf28d1ae93e1631be5b59196ee1e568f538",
+  "title": "From Local to Global: A Graph RAG Approach to Query-Focused Summarization",
+  "year": 2024,
+  "citationCount": 2176,
+  "venue": "arXiv.org"
+ },
+ {
+  "seed_name": "LightRAG",
+  "paperId": "1ea143c34b9bc359780f79ba4d68dee68bcc1129",
+  "title": "LightRAG: Simple and Fast Retrieval-Augmented Generation",
+  "year": 2024,
+  "citationCount": 488,
+  "venue": "Conference on Empirical Methods in Natural Language Processing"
+ },
+ {
+  "seed_name": "NAS_ZophLe",
+  "paperId": "67d968c7450878190e45ac7886746de867bf673d",
+  "title": "Neural Architecture Search with Reinforcement Learning",
+  "year": 2016,
+  "citationCount": 6045,
+  "venue": "International Conference on Learning Representations"
+ },
+ {
+  "seed_name": "AutoML_graph",
+  "paperId": "f146ab2cc2c11125c0f367019365667b2b02a0a0",
+  "title": "Automated Machine Learning on Graphs: A Survey",
+  "year": 2021,
+  "citationCount": 97,
+  "venue": "International Joint Conference on Artificial Intelligence"
+ },
+ {
+  "seed_name": "GSL_IDGL",
+  "paperId": "ff6a4a9a41b78c8b1fcab185db780266bbb06caf",
+  "title": "Iterative Deep Graph Learning for Graph Neural Networks: Better and Robust Node Embeddings",
+  "year": 2020,
+  "citationCount": 553,
+  "venue": "Neural Information Processing Systems"
+ },
+ {
+  "seed_name": "GSL_ProGNN",
+  "paperId": "2d615707481030d271f2c888b13267b1681f4aa2",
+  "title": "Graph Structure Learning for Robust Graph Neural Networks",
+  "year": 2020,
+  "citationCount": 961,
+  "venue": "Knowledge Discovery and Data Mining"
+ }
+]
