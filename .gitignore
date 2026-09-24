@@ -74,3 +74,6 @@ data/*/author_lookup_cache.csv
 
 # Internal audit notes, local only
 docs/
+
+# Literature-survey scratch, local only
+data/related_work/
