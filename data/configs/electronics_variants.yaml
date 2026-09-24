@@ -178,7 +178,7 @@ variants:
     - {N: N8, E: E11a}
     - {N: N8, E: E11b}
     # E11c removed (pre-publication audit FIX 1): undocumented alias for
-    # E10a. See AUDIT_pre_publication.md FIX 1.
+    # E10a.
     - {N: N9, E: E10b}
     - {N: N9, E: E10c}
     - {N: N9, E: E11a}
@@ -207,7 +207,7 @@ variants:
     - {N: N8, E: E11a}
     - {N: N8, E: E11b}
     # E11c removed (pre-publication audit FIX 1): undocumented alias for
-    # E10a. See AUDIT_pre_publication.md FIX 1.
+    # E10a.
     - {N: N9, E: E10b}
     - {N: N9, E: E10c}
     - {N: N9, E: E11a}

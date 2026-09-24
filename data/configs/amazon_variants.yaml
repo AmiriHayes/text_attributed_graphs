@@ -230,7 +230,7 @@ variants:
     # E11c removed (pre-publication audit FIX 1): implementation was an
     # undocumented alias for E10a (identical edges), not a distinct
     # construction. Deprecated in edge_factory.py rather than silently
-    # kept. See AUDIT_pre_publication.md FIX 1.
+    # kept.
     - {N: N9, E: E10b}
     - {N: N9, E: E10c}
     - {N: N9, E: E11a}
@@ -261,7 +261,7 @@ variants:
     # E11c removed (pre-publication audit FIX 1): implementation was an
     # undocumented alias for E10a (identical edges), not a distinct
     # construction. Deprecated in edge_factory.py rather than silently
-    # kept. See AUDIT_pre_publication.md FIX 1.
+    # kept.
     - {N: N9, E: E10b}
     - {N: N9, E: E10c}
     - {N: N9, E: E11a}

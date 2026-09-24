@@ -82,7 +82,7 @@ def main():
         epoch_dir = Path(args.epoch_dir)
     else:
         # Rule A selects variants the main run did not log; prefer the side-run.
-        side = REPO / f'output/run_final/epoch_logs_ruleA/{ds}'
+        side = REPO / f'output/run_final/epoch_logs_figures/{ds}'
         epoch_dir = side if side.is_dir() else REPO / f'output/run_final/epoch_logs/{ds}'
 
     fig = plt.figure(figsize=(args.width, args.width * 0.80), facecolor='white')

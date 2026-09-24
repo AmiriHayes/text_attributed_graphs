@@ -15,14 +15,14 @@ m1_meta_url: "https://huggingface.co/datasets/McAuley-Lab/Amazon-Reviews-2023/re
 
 # E11b structural-similarity k-NN parameter (pre-publication audit FIX 3).
 # k=50 default degenerated into near-complete graphs under centrality-tie
-# clustering (see AUDIT_pre_publication.md). k=5 empirically validated on
+# clustering. k=5 empirically validated on
 # ArXiv/N7/T12a (RAGAS 0.359->0.639, raw_gnn unchanged p=0.302).
 k_structural: 5
 
 # N8 minimum_hub_size (pre-publication audit FIX 4): filters N8 nodes to
 # those with >= this many associated N7 nodes. Default 1 = no filtering
 # (current/original behavior; 87-98% of N8 nodes are singletons at this
-# setting). See AUDIT_pre_publication.md FIX 4: no value >=2 keeps enough
+# setting). Finding: no value >=2 keeps enough
 # nodes at 1000-row GNN-training-sample scale for Amazon; min_hub_size=2-3
 # is viable at the larger pooled GraphRAG-graph scale only. Left at 1 here
 # pending the targeted pooled-scale rerun (see rerun plan).

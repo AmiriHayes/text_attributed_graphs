@@ -11,7 +11,7 @@ run_final/
   ragas_results_<dataset>.csv                    RAGAS scores, one row per (variant, question)
   question_split_<dataset>.csv                   the frozen 150/150 question split
   epoch_logs/<dataset>/                          per-epoch curves from the main run
-  epoch_logs_ruleA/<dataset>/                    per-epoch curves for the Rule A variants
+  epoch_logs_figures/<dataset>/                  per-epoch curves for the variants the paper plots
   analysis/
     dt_consistency_with_control/   <- Table 3, Figure 4 (the published estimator)
     dt_consistency/                   the same analysis excluding the no-text control

@@ -8,7 +8,7 @@ the GraphRAG composite, defined once in _construction_panel.rule_a).
 
 Epoch-log source per dataset is resolved here rather than passed by hand:
 Rule A selects variants that the main run did not log, so four datasets have
-a side-run under output/run_final/epoch_logs_ruleA/.
+a side-run under output/run_final/epoch_logs_figures/.
 
 Writes:  paper/artifacts/fig_{dataset}_{construction,graphrag}_performance_runfinal.pdf
 
@@ -26,8 +26,8 @@ APPENDIX = ['arxiv', 'electronics', 'toys', 'history']
 
 
 def epoch_dir(ds: str) -> Path:
-    """Rule A side-run if one exists, otherwise the main run's logs."""
-    side = RUN / 'epoch_logs_ruleA' / ds
+    """The figure side-run if one exists, otherwise the main run's logs."""
+    side = RUN / 'epoch_logs_figures' / ds
     return side if side.is_dir() else RUN / 'epoch_logs' / ds
 
 

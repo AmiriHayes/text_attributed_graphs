@@ -48,7 +48,7 @@ Edge vocabulary, which is inconsistent in older comments:
 | `E10c` | `E4c` | participation edges |
 | `E11a` | `E5a` | semantic similarity (cosine on text embeddings) |
 | `E11b` | `E5b` | structural similarity (k-NN on centrality, k=5) |
-| `E11c` | — | deprecated; was byte-identical to `E10a` (see `docs/AUDIT_pre_publication.md`) |
+| `E11c` | — | deprecated; was byte-identical to `E10a` |
 
 **`E10d` does not exist.** `edge_factory.py` has no `E10d` branch, so no
 `E10d` variant can be built. Some older comments in

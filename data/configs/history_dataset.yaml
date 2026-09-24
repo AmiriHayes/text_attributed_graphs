@@ -13,7 +13,7 @@ aggregate_embedding_prefix: category   # category_embeddings.npy + category_inde
 m2_transform: local_zscore
 # E11b structural-similarity k-NN parameter (pre-publication audit FIX 3).
 # k=50 default degenerated into near-complete graphs under centrality-tie
-# clustering (see AUDIT_pre_publication.md). k=5 empirically validated on
+# clustering. k=5 empirically validated on
 # ArXiv/N7/T12a (RAGAS 0.359->0.639, raw_gnn unchanged p=0.302).
 k_structural: 5
 dataset_characterization:
