@@ -50,7 +50,9 @@ ZERO = 0.95
 # Electronics and Toys (also Amazon Reviews categories) appear in the same paper.
 DISP = {'arxiv': 'ArXiv', 'amazon': 'Amazon Sports', 'history': 'History',
         'electronics': 'Electronics', 'toys': 'Toys'}
-NODE_STYLE = {'N7': '-', 'N8': '--', 'N9': '-.'}
+# All solid: each variant already has its own colour, and dashed/dash-dot
+# styles broke up the thin per-sample lines into something hard to follow.
+NODE_STYLE = {'N7': '-', 'N8': '-', 'N9': '-'}
 PALETTE = {'N7': ['#EA4335', '#FF6D00'], 'N8': ['#4285F4', '#A142F4'],
            'N9': ['#FBBC05', '#34A853']}
 CONTROL = '#5F6368'
@@ -87,7 +89,7 @@ def main():
 
     fig = plt.figure(figsize=(args.width, args.width * 0.80), facecolor='white')
     gs = gridspec.GridSpec(2, 2, width_ratios=[1, 1.20], height_ratios=[1, 1],
-                           wspace=0.18, hspace=0.34)
+                           wspace=0.26, hspace=0.39)
 
     # ───────────────────────── ROW 1: GNN ─────────────────────────
     d = pd.read_csv(REPO / f'output/run_final/construction_performance_table_{ds}.csv')
@@ -135,7 +137,7 @@ def main():
         print(f'  WARNING: no epoch logs for {[relabel(m) for m in missing]} '
               f'-- those curves will be absent from the GNN panel')
 
-    ax = fig.add_subplot(gs[0, 0])
+    ax = ax_r0l = fig.add_subplot(gs[0, 0])
     peak = 0.0
     for N, E, T, color in chosen + ([(*ctrl, CONTROL)] if ctrl else []):
         paths = sorted(glob.glob(str(epoch_dir / f'M1_{N}_{E}_{T}_*.csv')))
@@ -151,13 +153,13 @@ def main():
         mc = pd.concat(curves, axis=1).mean(axis=1)
         ax.plot(mc.index, mc.values, color=color, linestyle=NODE_STYLE[N], lw=4,
                 label=relabel('/'.join((N, E, T))), zorder=3)
-    top = max(70, int((peak + 9) // 10 * 10))
-    ax.set_xlabel('Epochs', fontsize=12); ax.set_ylabel('GNN Accuracy', fontsize=12)
+    top = 100   # fixed scale, matching the appendix construction panels
+    ax.set_xlabel('Epochs', fontsize=16, labelpad=6)
+    ax.set_ylabel('GNN Accuracy', fontsize=16)
     ax.set_ylim(0, top); ax.set_xlim(0, 100)
     ax.yaxis.set_major_formatter(PercentFormatter(xmax=100, decimals=0))
-    ax.set_title(f'{name}: GNN Node Classification', fontsize=13, fontweight='bold')
     style_legend(ax, loc='upper left'); ax.grid(alpha=0.25)
-    ax.spines[['top', 'right']].set_visible(False); ax.tick_params(labelsize=9)
+    ax.spines[['top', 'right']].set_visible(False); ax.tick_params(labelsize=13)
 
     gdf = m1[m1[F].apply(tuple, axis=1).isin(keep)].copy()
     gdf['sample_idx'] = pd.to_numeric(gdf['sample_idx'], errors='coerce').astype('Int64')
@@ -166,19 +168,18 @@ def main():
               sorted(td.sample_idx.unique())[-HELD_OUT_FALLBACK_N:]
     piv = build_pivot(gdf, 'Top1', 100.0, samples, compute_row_order(gdf, samples))
     piv.index = [relabel(str(i).replace('M1_', '').replace('_', '/')) for i in piv.index]
-    ax = fig.add_subplot(gs[0, 1])
+    ax = ax_r0r = fig.add_subplot(gs[0, 1])
     sns.heatmap(piv, ax=ax, cmap='RdYlGn', linewidths=0.3, linecolor='#e0e0e0', cbar=False,
                 yticklabels=True, xticklabels=False, annot=True, fmt='.0f',
                 annot_kws={'fontsize': 4.6})
-    ax.set_xlabel('Held-out test subsets', fontsize=10); ax.set_ylabel('')
-    ax.set_yticklabels(ax.get_yticklabels(), rotation=0, fontsize=5.6)
-    ax.set_title(f'{name}: GNN Score Heatmap', fontsize=13, fontweight='bold')
+    ax.set_xlabel('Held-out test subsets', fontsize=16, labelpad=23); ax.set_ylabel('')
+    ax.set_yticklabels(ax.get_yticklabels(), rotation=0, fontsize=9.6)
 
     # ─────────────────────── ROW 2: GraphRAG ───────────────────────
     # same six variants, same colours as the GNN row above
     gchosen = [('_'.join(c[:3]), c[0], c[3]) for c in chosen]
 
-    ax = fig.add_subplot(gs[1, 0])
+    ax = ax_r1l = fig.add_subplot(gs[1, 0])
     qids = sorted(test.question_id.unique())
     for v, n, color in gchosen:
         s = test[test.variant == v].set_index('question_id')[METRIC]
@@ -191,16 +192,13 @@ def main():
             ax.plot(range(1, len(run) + 1), run, color=color, lw=1.2, alpha=0.30, zorder=2)
         ax.plot(range(1, len(runs[0]) + 1), np.mean(runs, axis=0), color=color,
                 linestyle=NODE_STYLE.get(n, '-'), lw=4, label=relabel(v.replace('_', '/')), zorder=3)
-    finals = [np.mean(test[test.variant == v][METRIC]) * 100 for v, _, _ in gchosen]
-    span = max(max(finals) - min(finals), 4.0)
-    ax.set_ylim(max(0, min(finals) - 0.6 * span), min(100, max(finals) + 0.6 * span))
+    ax.set_ylim(0, 100)   # fixed scale, matching every other panel
     ax.set_xlim(1, len(qids))
     ax.yaxis.set_major_formatter(PercentFormatter(xmax=100, decimals=0))
-    ax.set_xlabel('Questions evaluated', fontsize=12)
-    ax.set_ylabel('RAGAS Composite', fontsize=12)
-    ax.set_title(f'{name}: GraphRAG Question Answering', fontsize=13, fontweight='bold')
-    style_legend(ax, loc='upper right'); ax.grid(alpha=0.25)
-    ax.spines[['top', 'right']].set_visible(False); ax.tick_params(labelsize=9)
+    ax.set_xlabel('Questions evaluated', fontsize=16, labelpad=6)
+    ax.set_ylabel('RAGAS Composite', fontsize=16)
+    style_legend(ax, loc='lower left'); ax.grid(alpha=0.25)
+    ax.spines[['top', 'right']].set_visible(False); ax.tick_params(labelsize=13)
 
     rng = np.random.RandomState(SEED)
     buckets = {q: i for i, ch in enumerate(np.array_split(list(rng.permutation(qids)), N_BUCKETS)) for q in ch}
@@ -208,13 +206,22 @@ def main():
     gp = test.pivot_table(index=['N', 'E', 'T'], columns='bucket', values=METRIC, aggfunc='mean') * 100
     gp = gp.loc[gp.mean(axis=1).sort_values(ascending=False).index].sort_index(level=0, sort_remaining=False)
     gp.index = [relabel('/'.join(i)) for i in gp.index]
-    ax = fig.add_subplot(gs[1, 1])
+    ax = ax_r1r = fig.add_subplot(gs[1, 1])
     sns.heatmap(gp, ax=ax, cmap='RdYlGn', linewidths=0.3, linecolor='#e0e0e0', cbar=False,
                 yticklabels=True, xticklabels=False, annot=True, fmt='.0f',
                 annot_kws={'fontsize': 4.6})
-    ax.set_xlabel('Question buckets', fontsize=10); ax.set_ylabel('')
-    ax.set_yticklabels(ax.get_yticklabels(), rotation=0, fontsize=5.6)
-    ax.set_title(f'{name}: GraphRAG Score Heatmap', fontsize=13, fontweight='bold')
+    ax.set_xlabel('Question buckets', fontsize=16, labelpad=23); ax.set_ylabel('')
+    ax.set_yticklabels(ax.get_yticklabels(), rotation=0, fontsize=9.6)
+
+    # One title per row rather than one per panel: the two panels in a row are
+    # two views of the same task, so a spanning title says that and frees the
+    # vertical space four separate titles were using.
+    for (left, right), task in [((ax_r0l, ax_r0r), 'Node Classification'),
+                                ((ax_r1l, ax_r1r), 'Question Answering')]:
+        bl, br = left.get_position(), right.get_position()
+        fig.text((bl.x0 + br.x1) / 2, max(bl.y1, br.y1) + 0.022,
+                 f'{name}: Construction Performance on {task}',
+                 ha='center', va='bottom', fontsize=19, fontweight='bold')
 
     out = Path(__file__).resolve().parent / 'artifacts' / f'fig_{ds}_combined_performance'
     for ext in ('pdf', 'png'):

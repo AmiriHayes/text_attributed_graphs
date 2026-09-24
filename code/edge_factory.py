@@ -608,4 +608,3 @@ class EdgeFactory:
                         edges.append((node_list[i], node_list[j], sim))
         return edges
 
-# Made with Bob

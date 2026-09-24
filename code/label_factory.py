@@ -395,4 +395,3 @@ class LabelFactory:
                 one_hot[i, idx] = 1.0
         return one_hot
 
-# Made with Bob

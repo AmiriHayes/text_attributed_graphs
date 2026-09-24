@@ -475,4 +475,3 @@ class GenericDataManager(BaseDataManager):
         """Get dataset configuration."""
         return self.config
 
-# Made with Bob

@@ -13,11 +13,18 @@ run_final/
   epoch_logs/<dataset>/                          per-epoch curves from the main run
   epoch_logs_figures/<dataset>/                  per-epoch curves for the variants the paper plots
   analysis/
-    dt_consistency_with_control/   <- Table 3, Figure 4 (the published estimator)
-    dt_consistency/                   the same analysis excluding the no-text control
+    dt_consistency_with_control/   <- Table 3 and Figure 4. THE published estimator;
+                                      every consistency number in the paper is from here.
+    dt_consistency/                   same analysis excluding the no-text control
+                                      (reproduce with --no-control). Not published.
     timing_table_{raw,plateau}.csv <- Table 4
     ted_random_baseline.csv           the null model quoted in Section 4.3
     superseded/                       retired analyses, kept for provenance only
+
+Directories not listed above -- `dt_consistency/`, `dt_consistency_dedup/`,
+`superseded/`, `architecture/`, `tree_ablation/`, `full_scale/` -- are
+supporting or retired analyses. None of them feeds a number in the paper, and
+the first three are gitignored so they do not ship.
 ```
 
 **`analysis/superseded/` is not used by anything.** It holds earlier

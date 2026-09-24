@@ -23,7 +23,6 @@ paper/         generators for every figure and table in the manuscript
 data/          inputs only: configs, raw rows, sampled subsets, questions
 output/
   run_final/   the canonical run every paper number comes from
-  figures/     the 10 figures the paper includes
 ```
 
 ## Reproducing the paper

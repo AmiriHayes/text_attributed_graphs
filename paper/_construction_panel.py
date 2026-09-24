@@ -49,9 +49,11 @@ plt.rcParams['font.serif'] = ['Times New Roman', 'Times', 'DejaVu Serif']
 REPO = Path(__file__).resolve().parent.parent
 F = ['Node_Idx', 'Edge_Idx', 'Text_Idx']
 ZERO = 0.95
-DISP = {'arxiv': 'ArXiv', 'amazon': 'Amazon', 'history': 'History',
+DISP = {'arxiv': 'ArXiv', 'amazon': 'Amazon Sports', 'history': 'History',
         'electronics': 'Electronics', 'toys': 'Toys'}
-NODE_STYLE = {'N7': '-', 'N8': '--', 'N9': '-.'}
+# All solid: each variant already has its own colour, and dashed/dash-dot
+# styles broke up the thin per-sample lines into something hard to follow.
+NODE_STYLE = {'N7': '-', 'N8': '-', 'N9': '-'}
 PALETTE = {'N7': ['#EA4335', '#FF6D00'], 'N8': ['#4285F4', '#A142F4'],
            'N9': ['#FBBC05', '#34A853']}
 CONTROL_COLOR = '#5F6368'
@@ -184,10 +186,10 @@ def main():
              transform=ax1.transAxes, ha='center', fontsize=11.5, style='italic')
     ax1.set_xlabel('Epochs', fontsize=15)
     ax1.set_ylabel('GNN Accuracy', fontsize=15)
-    # Adaptive ceiling: ArXiv's N2 (author) variants reach ~93%, which a
-    # hardcoded 70% limit silently clipped. Round up to the next 10% with a
-    # little headroom, never below 70 so panels stay broadly comparable.
-    top = max(70, int((peak + 9) // 10 * 10))
+    # Fixed 0-100 ceiling so accuracy is read on the same scale in every
+    # dataset's panel. An adaptive ceiling makes Toys (peak ~62%) and ArXiv
+    # (peak ~93%) look equally tall, which invites the wrong comparison.
+    top = 100
     ax1.set_ylim(0, top)
     ax1.set_yticks(range(0, top + 1, 10))
     ax1.set_yticklabels([f'{v}%' for v in range(0, top + 1, 10)])
@@ -219,7 +221,8 @@ def main():
     ax2.set_xlabel(''); ax2.set_ylabel('')
     ax2.set_yticklabels(ax2.get_yticklabels(), rotation=0, fontsize=8.5)
 
-    fig.suptitle('GNN Performance on Node Classification', fontsize=19, fontweight='bold', y=1.02)
+    # No figure title: the manuscript supplies the dataset and task in the
+    # minipage header above each panel, so a suptitle would duplicate it.
     plt.tight_layout()
     pos = ax2.get_position()
     ax2.set_position([pos.x0, pos.y0 - 0.025, pos.width, pos.height + 0.060])

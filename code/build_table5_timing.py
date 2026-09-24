@@ -72,7 +72,6 @@ import pandas as pd
 REPO = Path(__file__).resolve().parent.parent
 ANALYSIS = REPO / 'output' / 'run_final' / 'analysis'
 RUN_FINAL = REPO / 'output' / 'run_final'
-TAB_DIR = REPO / 'output' / 'tables'
 
 DATASETS = ['history', 'arxiv', 'amazon', 'electronics', 'toys']
 DISPLAY = {'arxiv': 'ArXiv', 'amazon': 'Amazon', 'history': 'History',
@@ -232,7 +231,6 @@ def to_tex(t: pd.DataFrame) -> str:
 if __name__ == '__main__':
     t = build()
     ANALYSIS.mkdir(parents=True, exist_ok=True)
-    TAB_DIR.mkdir(parents=True, exist_ok=True)
     t.to_csv(ANALYSIS / 'timing_table_plateau.csv', index=False)
     tex = to_tex(t)
     print(t.to_string(index=False))

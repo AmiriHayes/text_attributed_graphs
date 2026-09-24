@@ -49,9 +49,11 @@ plt.rcParams['font.family'] = 'serif'
 plt.rcParams['font.serif'] = ['Times New Roman', 'Times', 'DejaVu Serif']
 
 REPO = Path(__file__).resolve().parent.parent
-DISP = {'arxiv': 'ArXiv', 'amazon': 'Amazon', 'history': 'History',
+DISP = {'arxiv': 'ArXiv', 'amazon': 'Amazon Sports', 'history': 'History',
         'electronics': 'Electronics', 'toys': 'Toys'}
-NODE_STYLE = {'N7': '-', 'N8': '--', 'N9': '-.'}
+# All solid: each variant already has its own colour, and dashed/dash-dot
+# styles broke up the thin per-sample lines into something hard to follow.
+NODE_STYLE = {'N7': '-', 'N8': '-', 'N9': '-'}
 PALETTE = {'N7': ['#EA4335', '#FF6D00'], 'N8': ['#4285F4', '#A142F4'],
            'N9': ['#FBBC05', '#34A853']}
 METRIC = 'composite'
@@ -132,13 +134,11 @@ def main():
     ax1.set_xlabel('Questions evaluated', fontsize=15)
     ax1.set_ylabel('RAGAS Composite', fontsize=15)
     ax1.set_xlim(1, len(qids))
-    # Narrow the y-range to the converged region so trajectories separate. The
-    # first few questions swing wildly and would otherwise force a 40-100 range
-    # in which every curve overlaps. Bounds come from the mean curves over the
-    # back half, padded; early thin-line excursions clip, which is intended.
-    finals = [np.mean(test[test.variant == v][METRIC]) * 100 for v, _, _ in chosen]
-    span = max(max(finals) - min(finals), 4.0)
-    ax1.set_ylim(max(0, min(finals) - 0.6 * span), min(100, max(finals) + 0.6 * span))
+    # Fixed 0-100 so every panel in the paper, GNN and retrieval alike, is read
+    # on the same scale. Retrieval composites occupy a narrow band near the top,
+    # so curves sit closer together than a zoomed range would show.
+    ax1.set_ylim(0, 100)
+    ax1.set_yticks(range(0, 101, 10))
     # PercentFormatter rather than set_yticklabels(get_yticks()): the latter
     # pins labels to whatever ticks happen to exist at call time and warns
     # that they may be mislabeled if the locator later moves them.
@@ -170,8 +170,8 @@ def main():
     ax2.set_xlabel(''); ax2.set_ylabel('')
     ax2.set_yticklabels(ax2.get_yticklabels(), rotation=0, fontsize=8.5)
 
-    fig.suptitle('GraphRAG Performance on Question Answering',
-                 fontsize=19, fontweight='bold', y=1.02)
+    # No figure title: the manuscript supplies the dataset and task in the
+    # minipage header above each panel, so a suptitle would duplicate it.
     plt.tight_layout()
     pos = ax2.get_position()
     ax2.set_position([pos.x0, pos.y0 - 0.025, pos.width, pos.height + 0.060])

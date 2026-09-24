@@ -1,0 +1,31 @@
+\begin{table}[htbp]
+\centering
+\small
+\caption{Does the subset ranking predict full-scale performance? Every variant
+was additionally trained once on the complete held-out pool (20{,}775--50{,}000
+rows rather than 1{,}000), with identical architecture and hyperparameters.
+\textbf{Over guard} counts variants whose full-scale graph exceeds the
+pipeline's own $200{,}000$-edge degeneracy limit, so the proxy ranks
+constructions that cannot be trained at full scale; $^{\dagger}$ marks datasets
+where the top-ranked construction is one of them. $\rho$ columns are Spearman
+against the full-scale score. \textbf{Gain} is the share of the oracle
+improvement over a blind pick that the tree's choice recovers \emph{at full
+scale}. The last two columns show that subset scoring shifts the absolute level
+substantially while preserving order.}
+\label{tab:full_scale}
+\vspace{4pt}
+\begin{tabular}{lrrccccc}
+\toprule
+ & \multicolumn{2}{c}{Variants} & \multicolumn{2}{c}{$\rho$ vs full scale}
+ & & \multicolumn{2}{c}{Mean score} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){7-8}
+Dataset & All & Over guard & Subset mean & Tree & Gain & Subset & Full \\
+\midrule
+History & 8 & 2$^{\dagger}$ & 0.829 & 0.488 & 100.0\% & 33.22 & 55.51 \\
+Sports & 20 & 4 & 0.750 & 0.735 & 69.0\% & 29.02 & 61.91 \\
+ArXiv & 16 & 10$^{\dagger}$ & 0.776 & 0.823 & 100.0\% & 63.14 & 74.38 \\
+Electronics & 20 & 4 & 0.902 & 0.915 & 95.5\% & 38.06 & 63.18 \\
+Toys & 20 & 6 & 0.856 & 0.854 & 81.4\% & 6.00 & 48.14 \\
+\bottomrule
+\end{tabular}
+\end{table}
