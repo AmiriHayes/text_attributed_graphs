@@ -81,6 +81,8 @@ data/related_work/
 # Superseded scripts and alternative analyses: kept locally for provenance,
 # excluded from the release so only what produced the paper is published.
 code/superseded/
-output/run_final/analysis/dt_consistency/
 output/run_final/analysis/dt_consistency_dedup/
 output/run_final/analysis/superseded/
+
+# Local review-pass analyses (not part of the paper's reproduction path)
+analysis_local/

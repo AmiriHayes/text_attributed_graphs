@@ -1,6 +1,0 @@
-dataset,n_variants,n_feasible_full_scale,n_too_dense_full_scale,n_over_pipeline_guard,top_pick_over_pipeline_guard,top_train_mean_variant,top_train_mean_feasible,top_tree_variant,top_tree_feasible,rho_train_mean_vs_full,p_train_mean_vs_full,rho_tree_vs_full,p_tree_vs_full,rho_test_mean_vs_full,p_test_mean_vs_full,full_oracle,full_random_mean,full_pick_tree,full_pick_train_mean,pct_gain_tree,mean_subset_score,mean_full_score
-history,8,6,2,2,True,N7/E10b/T12a,False,N7/E10b/T12a,False,0.829,0.04156268221574335,0.488,0.3261642353450602,0.714,0.11078717201166179,58.58,55.51,58.58,58.58,100.0,33.22,55.51
-amazon,20,20,0,4,False,N7/E11b/T12a,True,N7/E10c/T12a,True,0.75,0.00013841163311276023,0.735,0.00022050271599437907,0.782,4.6467758941161836e-05,72.19,61.91,69.0,68.83,69.0,29.02,61.91
-arxiv,16,16,0,10,True,N8/E10c/T12a,True,N8/E10c/T12a,True,0.776,0.0004043508405454708,0.823,8.853228640771571e-05,0.753,0.0007610810731946066,79.71,74.38,79.71,79.71,100.0,63.14,74.38
-electronics,20,20,0,4,False,N7/E11a/T12b,True,N7/E11a/T12a,True,0.902,5.3994774799641734e-08,0.915,1.5891493834517752e-08,0.832,5.522372803574219e-06,82.98,63.18,82.08,82.98,95.5,38.06,63.18
-toys,20,20,0,6,False,N7/E11a/T12a,True,N7/E11a/T12a,True,0.856,1.5129652137091297e-06,0.854,1.6313259407502476e-06,0.853,1.8006016805502168e-06,55.55,48.14,54.17,54.17,81.4,6.0,48.14

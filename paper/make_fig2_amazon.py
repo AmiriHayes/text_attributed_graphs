@@ -155,7 +155,7 @@ def main():
                 label=relabel('/'.join((N, E, T))), zorder=3)
     top = 100   # fixed scale, matching the appendix construction panels
     ax.set_xlabel('Epochs', fontsize=16, labelpad=6)
-    ax.set_ylabel('GNN Accuracy', fontsize=16)
+    ax.set_ylabel('GNN Score', fontsize=16)
     ax.set_ylim(0, top); ax.set_xlim(0, 100)
     ax.yaxis.set_major_formatter(PercentFormatter(xmax=100, decimals=0))
     style_legend(ax, loc='upper left'); ax.grid(alpha=0.25)
@@ -172,7 +172,7 @@ def main():
     sns.heatmap(piv, ax=ax, cmap='RdYlGn', linewidths=0.3, linecolor='#e0e0e0', cbar=False,
                 yticklabels=True, xticklabels=False, annot=True, fmt='.0f',
                 annot_kws={'fontsize': 4.6})
-    ax.set_xlabel('Held-out test subsets', fontsize=16, labelpad=23); ax.set_ylabel('')
+    ax.set_xlabel('Test subsets (GNN score)', fontsize=16, labelpad=23); ax.set_ylabel('')
     ax.set_yticklabels(ax.get_yticklabels(), rotation=0, fontsize=9.6)
 
     # ─────────────────────── ROW 2: GraphRAG ───────────────────────
@@ -210,7 +210,7 @@ def main():
     sns.heatmap(gp, ax=ax, cmap='RdYlGn', linewidths=0.3, linecolor='#e0e0e0', cbar=False,
                 yticklabels=True, xticklabels=False, annot=True, fmt='.0f',
                 annot_kws={'fontsize': 4.6})
-    ax.set_xlabel('Question buckets', fontsize=16, labelpad=23); ax.set_ylabel('')
+    ax.set_xlabel('Question buckets (RAGAS composite)', fontsize=16, labelpad=23); ax.set_ylabel('')
     ax.set_yticklabels(ax.get_yticklabels(), rotation=0, fontsize=9.6)
 
     # One title per row rather than one per panel: the two panels in a row are

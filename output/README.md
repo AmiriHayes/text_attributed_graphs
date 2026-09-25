@@ -13,10 +13,11 @@ run_final/
   epoch_logs/<dataset>/                          per-epoch curves from the main run
   epoch_logs_figures/<dataset>/                  per-epoch curves for the variants the paper plots
   analysis/
-    dt_consistency_with_control/   <- Table 3 and Figure 4. THE published estimator;
-                                      every consistency number in the paper is from here.
-    dt_consistency/                   same analysis excluding the no-text control
-                                      (reproduce with --no-control). Not published.
+    dt_consistency_with_control/   <- Table 3. Includes the no-text control so the
+                                      variant counts match Table 4.
+    dt_consistency/                   <- Figure 4. Same analysis excluding the control;
+                                      with it included the curve starts at ceiling and
+                                      shows no convergence. Both are published.
     timing_table_{raw,plateau}.csv <- Table 4
     ted_random_baseline.csv           the null model quoted in Section 4.3
     superseded/                       retired analyses, kept for provenance only

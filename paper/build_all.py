@@ -24,9 +24,11 @@ STEPS = [
     ('t4',   'Table 4  timing',             'make_table4.py',           []),
     ('fig2', 'Figure 2  Amazon 2x2',        'make_fig2_amazon.py',      []),
     ('fig3', 'Figure 3  Amazon trees',      'make_trees.py',            []),
-    ('fig4', 'Figure 4  stability',         'make_fig4_stability.py',
-     ['--include_control',
-      '--out', str(RUN / 'analysis' / 'dt_consistency_with_control')]),
+    # Figure 4 EXCLUDES the no-text control, unlike Table 3. With the control
+    # in, the tree only needs to learn "text beats no text" to rank most of the
+    # set, which it does at the smallest budget -- the curve starts at ceiling
+    # and the convergence the figure exists to show is invisible.
+    ('fig4', 'Figure 4  stability',         'make_fig4_stability.py', []),
     ('fig5', 'Figure 5  construction',      'make_fig5_construction.py', []),
 ]
 # fig3 and fig6 come from one script

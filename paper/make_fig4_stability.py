@@ -153,12 +153,12 @@ def main():
             ax.fill_between(c['n'], c['mean'] - c['std'], c['mean'] + c['std'],
                             color=COLOR[ds], alpha=0.13, lw=0)
         ax.axhline(0.80, color='0.45', ls=':', lw=1.1, zorder=0)
-        ax.set_title(titles[task], fontsize=11)
-        ax.set_xlabel(xlabels[task], fontsize=10)
+        ax.set_title(titles[task], fontsize=13, pad=12)
+        ax.set_xlabel(xlabels[task], fontsize=11)
         ax.grid(alpha=0.25, lw=0.6)
         ax.set_axisbelow(True)
 
-    axes[0].set_ylabel(r'Spearman $\rho$ vs held-out test pool', fontsize=10)
+    axes[0].set_ylabel(r'Spearman $\rho$ on test data', fontsize=11)
     axes[0].set_ylim(-0.05, 1.02)
     axes[1].legend(fontsize=8.5, loc='lower right', frameon=True, framealpha=0.92)
     fig.tight_layout()

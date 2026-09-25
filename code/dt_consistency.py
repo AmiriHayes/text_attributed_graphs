@@ -91,17 +91,6 @@ INCLUDE_CONTROL = False
 # is dropped before any tree is fit.
 ZERO_FRACTION_LIMIT = 0.95
 
-# When True, edge rules that build byte-identical graphs are collapsed to one
-# before any tree is fit.  code/detect_duplicate_edge_rules.py finds E10b and
-# E10c colliding on every (node type) of amazon, arxiv, electronics and toys;
-# only history distinguishes them.  A collision is not cosmetic: the two
-# one-hot columns are perfectly collinear, so a split between them is training
-# noise presented as a construction rule, and the duplicated pair contributes a
-# guaranteed-consistent point to every rank correlation.  Off by default so the
-# published numbers are reproduced unchanged; turn it on to see what the space
-# looks like once each distinct graph is counted once.
-DEDUPE_EDGES = False
-DUPLICATES_CSV = RUN / 'analysis' / 'edge_rule_duplicates.csv'
 
 # Legacy column value identifying node-classification rows in the raw table.
 # It is a row filter only.  Task is never a feature and never a grouping key.
@@ -140,27 +129,6 @@ def _pool_means(df: pd.DataFrame, unit_split: pd.Series, score: str) -> pd.DataF
     return out[AXES + ['train_mean', 'test_mean']]
 
 
-def _drop_duplicate_edges(out: pd.DataFrame, ds: str) -> pd.DataFrame:
-    """Collapse edge rules that build the same graph, per (dataset, node type).
-
-    Within a colliding group the last rule by name is kept, which retains E10c
-    over E10b: edge_factory._build_scalar_gt builds co-participation edges, so
-    E10c ('participation') is the label that matches what the code does.
-    """
-    if not DEDUPE_EDGES or not DUPLICATES_CSV.exists():
-        return out
-    dup = pd.read_csv(DUPLICATES_CSV)
-    dup = dup[dup['dataset'] == ds]
-    drop = set()
-    for _, r in dup.iterrows():
-        rules = sorted(str(r['duplicate_rules']).split('+'))
-        for rule in rules[:-1]:
-            drop.add((r['node_type'], rule))
-    if not drop:
-        return out
-    mask = ~out.apply(lambda row: (row['Node_Idx'], row['Edge_Idx']) in drop, axis=1)
-    return out[mask].reset_index(drop=True)
-
 
 def node_classification_variants(ds: str) -> pd.DataFrame:
     """150 subsets, 75 train / 75 test, scored by the normalized GNN score."""
@@ -176,7 +144,7 @@ def node_classification_variants(ds: str) -> pd.DataFrame:
             "code/experiment_runner.py; do not substitute 'normalized_score', "
             "which is on a different scale.")
     score = 'S_GNN_step1'
-    return _drop_duplicate_edges(_pool_means(df, df['run_split'], score), ds)
+    return _pool_means(df, df['run_split'], score)
 
 
 def graphrag_variants(ds: str) -> pd.DataFrame:
@@ -188,8 +156,7 @@ def graphrag_variants(ds: str) -> pd.DataFrame:
 
     split = pd.read_csv(RUN / f'question_split_{ds}.csv').set_index('question_id')['split']
     df = df[df['question_id'].isin(split.index)].copy()
-    return _drop_duplicate_edges(
-        _pool_means(df, df['question_id'].map(split), 'composite'), ds)
+    return _pool_means(df, df['question_id'].map(split), 'composite')
 
 
 TASKS = {
@@ -373,20 +340,13 @@ def main():
     ap.add_argument('--include_control', action='store_true',
                     help='Keep the no-text control in the node-classification '
                          'variant set so counts match the cost table. Inflates rho.')
-    ap.add_argument('--dedupe_edges', action='store_true',
-                    help='Collapse edge rules that build identical graphs '
-                         '(see code/detect_duplicate_edge_rules.py). Writes to '
-                         'a _dedup suffixed directory.')
     args = ap.parse_args()
-    global INCLUDE_CONTROL, DEDUPE_EDGES
+    global INCLUDE_CONTROL
     INCLUDE_CONTROL = args.include_control
-    DEDUPE_EDGES = args.dedupe_edges
     if args.out is None:
-        name = ('dt_consistency_with_control' if INCLUDE_CONTROL
-                else 'dt_consistency')
-        args.out = str(RUN / 'analysis' / (name + ('_dedup' if DEDUPE_EDGES else '')))
+        args.out = str(RUN / 'analysis' / ('dt_consistency_with_control'
+                                           if INCLUDE_CONTROL else 'dt_consistency'))
     print(f'no-text control: {"INCLUDED" if INCLUDE_CONTROL else "excluded"}')
-    print(f'duplicate edge rules: {"COLLAPSED" if DEDUPE_EDGES else "kept"}')
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
 

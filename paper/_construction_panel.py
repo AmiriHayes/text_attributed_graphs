@@ -185,7 +185,7 @@ def main():
     ax1.text(0.5, 1.05, 'Individual Samples = Thin Lines     Mean of Samples = Thick Line',
              transform=ax1.transAxes, ha='center', fontsize=11.5, style='italic')
     ax1.set_xlabel('Epochs', fontsize=15)
-    ax1.set_ylabel('GNN Accuracy', fontsize=15)
+    ax1.set_ylabel('GNN Score', fontsize=15)
     # Fixed 0-100 ceiling so accuracy is read on the same scale in every
     # dataset's panel. An adaptive ceiling makes Toys (peak ~62%) and ArXiv
     # (peak ~93%) look equally tall, which invites the wrong comparison.
@@ -218,7 +218,8 @@ def main():
     sns.heatmap(pivot, ax=ax2, cmap='RdYlGn', linewidths=0.3, linecolor='#e0e0e0',
                 cbar=False, yticklabels=True, xticklabels=False,
                 annot=True, fmt='.0f', annot_kws={'fontsize': 6.5})
-    ax2.set_xlabel(''); ax2.set_ylabel('')
+    ax2.set_xlabel('Test subsets (GNN score)', fontsize=13, labelpad=14)
+    ax2.set_ylabel('')
     ax2.set_yticklabels(ax2.get_yticklabels(), rotation=0, fontsize=8.5)
 
     # No figure title: the manuscript supplies the dataset and task in the

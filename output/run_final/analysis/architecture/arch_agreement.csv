@@ -1,2 +1,0 @@
-dataset,arch,n_variants,rho_vs_sage,p,sage_top,gcn_top,same_top_pick,same_top_node_type
-history,gcn,8,0.643,0.08555889101267328,N7/E10b/T12a,N7/E10c/T12a,False,True

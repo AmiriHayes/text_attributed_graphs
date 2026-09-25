@@ -167,7 +167,8 @@ def main():
     sns.heatmap(piv, ax=ax2, cmap='RdYlGn', linewidths=0.3, linecolor='#e0e0e0',
                 cbar=False, yticklabels=True, xticklabels=False,
                 annot=True, fmt='.0f', annot_kws={'fontsize': 6.5})
-    ax2.set_xlabel(''); ax2.set_ylabel('')
+    ax2.set_xlabel('Question buckets (RAGAS composite)', fontsize=13, labelpad=14)
+    ax2.set_ylabel('')
     ax2.set_yticklabels(ax2.get_yticklabels(), rotation=0, fontsize=8.5)
 
     # No figure title: the manuscript supplies the dataset and task in the
